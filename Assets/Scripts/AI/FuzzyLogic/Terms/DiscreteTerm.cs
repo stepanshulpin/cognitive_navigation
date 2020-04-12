@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AI.FuzzyLogic.Terms {
     public class DiscreteTerm : Term {
         public DiscreteTerm(string name, double[] x, double[] y) : base(name) {
             this.x = x;
             this.y = y;
-            this.lastPointIndex = x.Length - 1;
+            lastPointIndex = x.Length - 1;
         }
 
         public override double Membership(double value) {
@@ -33,6 +34,21 @@ namespace AI.FuzzyLogic.Terms {
 
         private double Scale(double x, double xMin, double xMax, double yMin, double yMax) {
             return (yMax - yMin) / (xMax - xMin) * (x - xMin) + yMin;
+        }        
+
+        public override TermType TermType()
+        {
+            return Terms.TermType.Discrete;
+        }
+
+        public override List<double> GetGenericParameters()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(List<double> parameters)
+        {
+            throw new NotImplementedException();
         }
 
         private double[] x;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AI.FuzzyLogic.Terms {
     public class SigmoidalTerm : Term {
@@ -10,6 +11,29 @@ namespace AI.FuzzyLogic.Terms {
         public override double Membership(double x) {
             return 1.0 / (1.0 + Math.Exp(- slope * (x - inflection)));
         }
+        public override List<double> GetGenericParameters()
+        {
+            List<double> parameters = new List<double>();
+            parameters.Add(inflection);
+            parameters.Add(slope);
+            return parameters;
+        }
+
+        public override void Update(List<double> parameters)
+        {
+            if (parameters.Count != 2)
+            {
+                throw new ArgumentException("Invalid parameters size");
+            }
+            inflection = parameters[0];
+            slope = parameters[1];
+        }
+
+        public override TermType TermType()
+        {
+            return Terms.TermType.Sigmoidal;
+        }
+
 
         private double inflection;
 

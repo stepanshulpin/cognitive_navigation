@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 
 namespace AI.GeneticAlgorithm {
-    public class RouletteWheelSelection<T> : ISelection<T> {
+    public class RouletteWheelSelection : ISelection {
         public RouletteWheelSelection(Random random) {
             this.random = random;
         }
-        public List<IGenome<T>> Select(int count, Generation<T> generation) {
-            float generationFitness = generation.CalculateFitness();
-            List<IGenome<T>> selected = new List<IGenome<T>>();
+        public List<IChromosome> Select(int count, Generation generation) {
+            double generationFitness = generation.CalculateFitness();
+            List<IChromosome> selected = new List<IChromosome>();
             for (int i = 0; i < count; i++) {
-                float expectedFitness = (float)random.NextDouble() * generationFitness;
-                IGenome<T> selectedIndividual = this.SelectAppropriateIndividual(generation.Individuals, expectedFitness);
+                double expectedFitness = random.NextDouble() * generationFitness;
+                IChromosome selectedIndividual = this.SelectAppropriateIndividual(generation.Individuals, expectedFitness);
                 selected.Add(selectedIndividual);
             }
             return selected;
         }
 
-        private IGenome<T> SelectAppropriateIndividual(List<IGenome<T>> individuals, float expectedFitness) {
+        private IChromosome SelectAppropriateIndividual(List<IChromosome> individuals, double expectedFitness) {
             int selected = -1;
             for (int i = 0; i < individuals.Count; i++) {
                 expectedFitness -= individuals[i].Fitness;

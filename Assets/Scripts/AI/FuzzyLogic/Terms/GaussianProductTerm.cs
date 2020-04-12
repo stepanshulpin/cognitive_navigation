@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AI.FuzzyLogic.Terms {
     public class GaussianProductTerm : Term {
@@ -20,6 +21,33 @@ namespace AI.FuzzyLogic.Terms {
             }
             return membershipA * membershipB;
         }
+        public override List<double> GetGenericParameters()
+        {
+            List<double> parameters = new List<double>();
+            parameters.Add(meanA);
+            parameters.Add(stdA);
+            parameters.Add(meanB);
+            parameters.Add(stdB);
+            return parameters;
+        }
+
+        public override void Update(List<double> parameters)
+        {
+            if (parameters.Count != 4)
+            {
+                throw new ArgumentException("Invalid parameters size");
+            }
+            meanA = parameters[0];
+            stdA = parameters[1];
+            meanB = parameters[2];
+            stdB = parameters[3];
+        }
+
+        public override TermType TermType()
+        {
+            return Terms.TermType.GaussianProduct;
+        }
+
 
         private double meanA;
 

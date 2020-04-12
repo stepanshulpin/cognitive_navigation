@@ -13,6 +13,7 @@ namespace AI.FuzzyLogic.Terms {
         LLinear,
         PiShaped,
         Rectangular,
+        RLinear,
         Sigmoidal,
         SShape,
         Trapezodial,
