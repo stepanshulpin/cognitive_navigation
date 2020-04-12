@@ -1,4 +1,7 @@
-﻿namespace AI.GeneticAlgorithm {
+﻿using System;
+
+namespace AI.GeneticAlgorithm {
+    [Obsolete]
     public interface IGenome<T> {
         int Length {
             get;

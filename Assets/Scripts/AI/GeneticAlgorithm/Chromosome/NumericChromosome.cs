@@ -2,7 +2,7 @@
 {
     public class NumericChromosome : IChromosome
     {
-        double[] Genes
+        public double[] Genes
         {
             get
             {

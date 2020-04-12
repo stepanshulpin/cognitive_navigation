@@ -30,6 +30,7 @@ namespace AI.GeneticAlgorithm
             }
         }
 
+        [Obsolete]
         public double Fitness
         {
             get

@@ -2,7 +2,9 @@
 using System.Linq;
 
 namespace AI.GeneticAlgorithm {
-    public class UniformMutation<T> : IMutation<T> {
+
+    [Obsolete]
+    public class UniformMutation : IMutation {
         public UniformMutation(Random random) {
             this.isBounded = false;
             this.mutableGenesIndices = null;
@@ -15,7 +17,7 @@ namespace AI.GeneticAlgorithm {
             this.random = random;
         }
 
-        public UniformMutation(Random random, T min, T max) {
+        public UniformMutation(Random random, double min, double max) {
             this.isBounded = true;
             this.min = min;
             this.max = max;
@@ -23,16 +25,16 @@ namespace AI.GeneticAlgorithm {
             this.random = random;
         }
 
-        public void Mutate(IGenome<T> individual, float probability) {
+        public void Mutate(IChromosome individual, double probability) {
             if (this.mutableGenesIndices == null || this.mutableGenesIndices.Length == 0) {
-                this.mutableGenesIndices = Enumerable.Range(0, individual.Length).ToArray();
+                this.mutableGenesIndices = Enumerable.Range(0, individual.Size).ToArray();
             }
             foreach (int geneIndex in this.mutableGenesIndices) {
                 if (this.random.NextDouble() > probability) {
                     if (this.isBounded) {
-                        individual.RandomizeGene(geneIndex, this.min, this.max);
+                        //individual.RandomizeGene(geneIndex, this.min, this.max);
                     } else {
-                        individual.RandomizeGene(geneIndex);
+                        //individual.RandomizeGene(geneIndex);
                     }
                 }
             }
@@ -40,9 +42,9 @@ namespace AI.GeneticAlgorithm {
 
         private bool isBounded;
 
-        private T min;
+        private double min;
 
-        private T max;
+        private double max;
 
         private int[] mutableGenesIndices;
 

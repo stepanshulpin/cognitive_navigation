@@ -15,6 +15,12 @@ namespace AI.GeneticAlgorithm
             set;
         }
 
+        double[] Genes
+        {
+            get;
+        }
+
+        void UpdateGenes(double[] genes);
         IChromosome Clone();
     }
 }

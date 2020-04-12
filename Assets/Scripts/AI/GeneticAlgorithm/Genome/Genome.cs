@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace AI.GeneticAlgorithm {
+    [Obsolete]
     public class Genome<T> : IGenome<T> {
         public int Length {
             get {

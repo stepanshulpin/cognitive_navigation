@@ -2,40 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AI.GeneticAlgorithm {
-    public class TournamentSelection : ISelection {
-        public TournamentSelection(int tournamentSize, Random random) : this(tournamentSize, true, random) {
+namespace AI.GeneticAlgorithm
+{
+    public class TournamentSelection : ISelection
+    {
+        public TournamentSelection(int tournamentSize, Utils.Random random) : this(tournamentSize, true, random)
+        {
         }
 
-        public TournamentSelection(int tournamentSize, bool doesWinnerCompeteFurther, Random random) {
+        public TournamentSelection(int tournamentSize, bool doesWinnerCompeteFurther, Utils.Random random)
+        {
             this.tournamentSize = tournamentSize;
-            this.doesWinnerCompeteFurther = doesWinnerCompeteFurther;
+            this.doesWinnerCompeteInNextRound = doesWinnerCompeteFurther;
             this.random = random;
         }
 
-        public List<IChromosome> Select(int count, Generation generation) {
+        public List<IChromosome> Select(int count, Generation generation)
+        {
             List<IChromosome> individuals = generation.Individuals.ToList();
             int[] participants;
             List<IChromosome> selected = new List<IChromosome>();
-            while (selected.Count < count) {
+            while (selected.Count < count)
+            {
                 participants = Enumerable.Repeat(0, this.tournamentSize).Select(
-                    individual => this.random.Next(individuals.Count)
-                ).ToArray();
+                individual => this.random.Next(individuals.Count)
+            ).ToArray();
                 IChromosome winner = individuals.Where(
                     (individual, index) => participants.Contains(index)
                 ).OrderByDescending(individual => individual.Fitness).First();
                 selected.Add(winner);
-                if (!this.doesWinnerCompeteFurther) {
+                if (!this.doesWinnerCompeteInNextRound)
+                {
                     individuals.Remove(winner);
                 }
             }
+
             return selected;
         }
 
         private int tournamentSize;
 
-        private bool doesWinnerCompeteFurther;
+        private bool doesWinnerCompeteInNextRound;
 
-        private Random random;
+        private Utils.Random random;
     }
 }

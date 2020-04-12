@@ -1,5 +1,5 @@
 ﻿namespace AI.GeneticAlgorithm {
-    public interface IMutation<T> {
-        void Mutate(IGenome<T> individual, float probability);
+    public interface IMutation {
+        void Mutate(IChromosome individual, double probability);
     }
 }

@@ -26,10 +26,20 @@ namespace Utils {
             return ((Func<T, T, T>)this.parametrizedRandoms[typeof(T)])(min, max);
         }
 
+        public double NextDouble()
+        {
+            return random.NextDouble();
+        }
+
         private void AddDefault() {
             this.Add<int>(() => random.Next());
             this.Add<float>(() => (float)random.NextDouble());
             this.Add<double>(() => random.NextDouble());
+        }
+
+        public int Next(int count)
+        {
+            return random.Next(count);
         }
 
         private void AddDefaultParametrized() {
