@@ -63,11 +63,11 @@ namespace AI.FuzzyLogic {
         }
 
         public Dictionary<string, double> Process(Dictionary<string, double> input) {
-            Debug.Log("Processing input");
+            //Debug.Log("Processing input");
             foreach (var inputPair in input) {
-                Debug.Log(string.Format("{0} : {1}", inputPair.Key, inputPair.Value));
+                //Debug.Log(string.Format("{0} : {1}", inputPair.Key, inputPair.Value));
             }
-            Debug.Log("Fuzzy input");
+            //Debug.Log("Fuzzy input");
             Fuzzify(input);
             foreach (var variabe in inputVariables.Values) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -75,7 +75,7 @@ namespace AI.FuzzyLogic {
                 foreach (var terms in variabe.Fuzzy) {
                     stringBuilder.AppendFormat("{0} {1} ", terms.Value, terms.Key);
                 }
-                Debug.Log(stringBuilder.ToString());
+                //Debug.Log(stringBuilder.ToString());
             }
             return fuzzyInferenceSystem.Process(rules, inputVariables, outputVariables);
         }

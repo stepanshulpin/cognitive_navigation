@@ -21,6 +21,16 @@ public class EvolutionAgent : MonoBehaviour
         this.hasTarget = true;
     }
 
+    public bool IsCrashed()
+    {
+        return isCrashed;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        isCrashed = true;
+    }
+
     public void UseRegularSkin()
     {
         GetComponent<Renderer>().sharedMaterial = this.originalMaterial;
@@ -33,6 +43,7 @@ public class EvolutionAgent : MonoBehaviour
 
     private void Awake()
     {
+        isCrashed = false;
         this.characterController = this.GetComponent<CharacterController>();
         this.originalMaterial = GetComponent<Renderer>().sharedMaterial;
         this.sensorManager = GetComponent<SensorsManager>();
@@ -181,6 +192,8 @@ public class EvolutionAgent : MonoBehaviour
     private Dictionary<string, double> fuzzyEngineInput;
 
     private Dictionary<string, double> fuzzyEngineOutput;
+
+    private bool isCrashed;
 
     private void junk()
     {

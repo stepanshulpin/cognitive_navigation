@@ -18,7 +18,7 @@ namespace AI.FuzzyLogic.FuzzyInference {
             activatedRules.Clear();
             foreach (Rule rule in rules) {
                 if (rule.Activate(conjuction, disjunction) > 0.0) {
-                    Debug.Log(string.Format("Activated {0} {1}", rule.ToString(), rule.ActivationDegree));
+                    //Debug.Log(string.Format("Activated {0} {1}", rule.ToString(), rule.ActivationDegree));
                     activatedRules.Add(rule);
                 }
             }

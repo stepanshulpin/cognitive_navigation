@@ -1,36 +1,46 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EvolutionAgentsManager : MonoBehaviour {
+public class EvolutionAgentsManager : MonoBehaviour
+{
     [Header("Agent")]
     public GameObject agentPrefab;
 
     public int agentsCount = 5;
 
-    public List<GameObject> AgentsObjects {
-        get {
+    public List<GameObject> AgentsObjects
+    {
+        get
+        {
             return this.agentsObjects;
         }
     }
 
-    public List<EvolutionAgent> Agents {
-        get {
+    public List<EvolutionAgent> Agents
+    {
+        get
+        {
             return this.agents;
         }
     }
 
-    public void TargetPositionUpdated(Vector3 targetPosition) {
-        foreach (EvolutionAgent agent in this.agents) {
+    public void TargetPositionUpdated(Vector3 targetPosition)
+    {
+        lastTarget = targetPosition;
+        foreach (EvolutionAgent agent in this.agents)
+        {
             agent.TargetPositionUpdated(targetPosition);
         }
     }
 
-    private void Awake() {
+    private void Awake()
+    {
         this.agents = new List<EvolutionAgent>();
         this.agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;
-        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++) {
+        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        {
             GameObject agentObject = Instantiate(this.agentPrefab);
             agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, 2.5f);
             agentObject.SetActive(false);
@@ -41,27 +51,89 @@ public class EvolutionAgentsManager : MonoBehaviour {
         this.followingCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowingCamera>();
     }
 
-    private void Start() {
+    private void Start()
+    {
         this.bestAgentIndex = 0;
         this.agentsObjects[bestAgentIndex].SetActive(true);
         this.followingCamera.target = this.agentsObjects[bestAgentIndex].transform;
         this.agents[bestAgentIndex].UseBestSkin();
-        for (int i = 0; i < this.agentsCount; i++) {
+        for (int i = 0; i < this.agentsCount; i++)
+        {
             this.agentsObjects[i].SetActive(true);
         }
     }
 
-    private void Update() {
+    private void Update()
+    {
 
     }
 
-    private void LateUpdate() {
+    private void LateUpdate()
+    {
+        tryStop();
         this.UpdateBestAgent();
     }
 
-    private void UpdateBestAgent() {
+    private void tryStop()
+    {
+        int activeCount = 0;
+        for (int agentIndex = 0; agentIndex < agentsObjects.Count; agentIndex++)
+        {
+            if (agentsObjects[agentIndex].activeSelf)
+            {
+                if (Agents[agentIndex].IsCrashed())
+                {
+                    Transform agent = this.agentsObjects[agentIndex].transform;
+                    agentsObjects[agentIndex].SetActive(false);
+                    Debug.Log("Agent crashed " + agentIndex + " position is " + agent.position.x);
+
+                } else
+                {
+                    activeCount++;
+                }
+            }
+        }
+        if (activeCount == 0)
+        {
+            restart();
+        }
+    }
+
+    private void restart()
+    {
+        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        {
+            Destroy(agentsObjects[agentNum]);
+        }
+        Debug.Log("Restart");
+        this.agents = new List<EvolutionAgent>();
+        this.agentsObjects = new List<GameObject>();
+        int middle = agentsCount / 2 - 1;
+        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        {
+            GameObject agentObject = Instantiate(this.agentPrefab);
+            agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, 2.5f);
+            agentObject.transform.position += new Vector3(followingCamera.target.position.x, 0, 0);
+            agentObject.SetActive(false);
+            this.agents.Add(agentObject.GetComponent<EvolutionAgent>());
+            this.agentsObjects.Add(agentObject);
+        }
+        this.bestAgentIndex = 0;
+        this.agentsObjects[bestAgentIndex].SetActive(true);
+        this.followingCamera.target = this.agentsObjects[bestAgentIndex].transform;
+        this.agents[bestAgentIndex].UseBestSkin();
+        for (int i = 0; i < this.agentsCount; i++)
+        {
+            this.agentsObjects[i].SetActive(true);
+        }
+        TargetPositionUpdated(lastTarget);
+    }
+
+    private void UpdateBestAgent()
+    {
         int bestAgentIndex = this.FindBestAgentIndex();
-        if (bestAgentIndex != this.bestAgentIndex) {
+        if (bestAgentIndex != this.bestAgentIndex)
+        {
             this.agents[this.bestAgentIndex].UseRegularSkin();
             this.agents[bestAgentIndex].UseBestSkin();
             this.bestAgentIndex = bestAgentIndex;
@@ -69,14 +141,18 @@ public class EvolutionAgentsManager : MonoBehaviour {
         }
     }
 
-    private int FindBestAgentIndex() {
+    private int FindBestAgentIndex()
+    {
         int bestAgentIndex = 0;
         Transform bestAgent = this.agentsObjects[bestAgentIndex].transform;
         float bestAgentDistance = bestAgent.position.x;
-        for (int agentIndex = 0; agentIndex < this.agentsObjects.Count; agentIndex++) {
-            if (this.agentsObjects[agentIndex].activeSelf) {
+        for (int agentIndex = 0; agentIndex < this.agentsObjects.Count; agentIndex++)
+        {
+            if (this.agentsObjects[agentIndex].activeSelf)
+            {
                 Transform agent = this.agentsObjects[agentIndex].transform;
-                if (agent.position.x > bestAgentDistance) {
+                if (agent.position.x > bestAgentDistance)
+                {
                     bestAgentIndex = agentIndex;
                     bestAgentDistance = agent.position.x;
                 }
@@ -92,4 +168,5 @@ public class EvolutionAgentsManager : MonoBehaviour {
     private int bestAgentIndex = 0;
 
     private FollowingCamera followingCamera;
+    private Vector3 lastTarget;
 }
