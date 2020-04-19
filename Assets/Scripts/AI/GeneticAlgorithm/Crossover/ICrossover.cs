@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace AI.GeneticAlgorithm {
+namespace AI.GeneticAlgorithm
+{
+    [Obsolete]
     public interface ICrossover<T> {
         int ParentsCount {
             get;

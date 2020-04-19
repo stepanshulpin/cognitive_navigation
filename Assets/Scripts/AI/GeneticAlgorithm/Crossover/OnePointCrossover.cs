@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AI.GeneticAlgorithm {
+    [Obsolete]
     public class OnePointCrossover<T> : ICrossover<T> {
         public int ParentsCount {
             get {
