@@ -48,6 +48,29 @@ public class EvolutionFloorManager : MonoBehaviour {
         this.agentsManager = GetComponent<EvolutionAgentsManager>();
     }
 
+    public void restart()
+    {
+        this.segments = new Queue<GameObject>();
+        this.segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
+        for (int segment = 0; segment < this.maxFloorSegments; segment++)
+        {
+            GameObject floorSegment = Instantiate(this.floorPrefab);
+            floorSegment.SetActive(false);
+            int segmentId = floorSegment.GetInstanceID();
+            List<GameObject> segmentObstacles = new List<GameObject>();
+            for (int obstacle = 0; obstacle < maxStaticObstaclesPerSegment; obstacle++)
+            {
+                GameObject staticObstacle = Instantiate(this.staticObstaclePrefab);
+                staticObstacle.SetActive(false);
+                staticObstacle.transform.SetParent(floorSegment.transform);
+                segmentObstacles.Add(staticObstacle);
+            }
+            this.segmentStaticObstacles.Add(segmentId, segmentObstacles);
+            this.segments.Enqueue(floorSegment);
+        }
+        this.SpawnStartSegment();
+    }
+
     private void Start() {
         this.SpawnStartSegment();
     }

@@ -7,13 +7,14 @@ public class EvolutionAgentsManager : MonoBehaviour
     [Header("Agent")]
     public GameObject agentPrefab;
 
+    public float agentDistance = 2.5f;
     public int agentsCount = 5;
 
     public List<GameObject> AgentsObjects
     {
         get
         {
-            return this.agentsObjects;
+            return agentsObjects;
         }
     }
 
@@ -21,14 +22,14 @@ public class EvolutionAgentsManager : MonoBehaviour
     {
         get
         {
-            return this.agents;
+            return agents;
         }
     }
 
     public void TargetPositionUpdated(Vector3 targetPosition)
     {
         lastTarget = targetPosition;
-        foreach (EvolutionAgent agent in this.agents)
+        foreach (EvolutionAgent agent in agents)
         {
             agent.TargetPositionUpdated(targetPosition);
         }
@@ -36,30 +37,31 @@ public class EvolutionAgentsManager : MonoBehaviour
 
     private void Awake()
     {
-        this.agents = new List<EvolutionAgent>();
-        this.agentsObjects = new List<GameObject>();
+        agents = new List<EvolutionAgent>();
+        agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;
-        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
-            GameObject agentObject = Instantiate(this.agentPrefab);
-            agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, 2.5f);
+            GameObject agentObject = Instantiate(agentPrefab);
+            agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, agentDistance);
             agentObject.SetActive(false);
-            this.agents.Add(agentObject.GetComponent<EvolutionAgent>());
-            this.agentsObjects.Add(agentObject);
+            agents.Add(agentObject.GetComponent<EvolutionAgent>());
+            agentsObjects.Add(agentObject);
         }
-
-        this.followingCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowingCamera>();
+        targetManager = GetComponent<EvolutionTargetManager>();
+        floorManager = GetComponent<EvolutionFloorManager>();
+        followingCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowingCamera>();
     }
 
     private void Start()
     {
-        this.bestAgentIndex = 0;
-        this.agentsObjects[bestAgentIndex].SetActive(true);
-        this.followingCamera.target = this.agentsObjects[bestAgentIndex].transform;
-        this.agents[bestAgentIndex].UseBestSkin();
-        for (int i = 0; i < this.agentsCount; i++)
+        bestAgentIndex = 0;
+        agentsObjects[bestAgentIndex].SetActive(true);
+        followingCamera.target = agentsObjects[bestAgentIndex].transform;
+        agents[bestAgentIndex].UseBestSkin();
+        for (int i = 0; i < agentsCount; i++)
         {
-            this.agentsObjects[i].SetActive(true);
+            agentsObjects[i].SetActive(true);
         }
     }
 
@@ -83,7 +85,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             {
                 if (Agents[agentIndex].IsCrashed())
                 {
-                    Transform agent = this.agentsObjects[agentIndex].transform;
+                    Transform agent = agentsObjects[agentIndex].transform;
                     agentsObjects[agentIndex].SetActive(false);
                     Debug.Log("Agent crashed " + agentIndex + " position is " + agent.position.x);
 
@@ -101,56 +103,57 @@ public class EvolutionAgentsManager : MonoBehaviour
 
     private void restart()
     {
-        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
             Destroy(agentsObjects[agentNum]);
         }
         Debug.Log("Restart");
-        this.agents = new List<EvolutionAgent>();
-        this.agentsObjects = new List<GameObject>();
+        floorManager.restart();
+        agents = new List<EvolutionAgent>();
+        agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;
-        for (int agentNum = 0; agentNum < this.agentsCount; agentNum++)
+        for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
-            GameObject agentObject = Instantiate(this.agentPrefab);
-            agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, 2.5f);
-            agentObject.transform.position += new Vector3(followingCamera.target.position.x, 0, 0);
+            GameObject agentObject = Instantiate(agentPrefab);
+            agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, agentDistance);
+            //agentObject.transform.position += new Vector3(followingCamera.target.position.x, 0, 0);
             agentObject.SetActive(false);
-            this.agents.Add(agentObject.GetComponent<EvolutionAgent>());
-            this.agentsObjects.Add(agentObject);
+            agents.Add(agentObject.GetComponent<EvolutionAgent>());
+            agentsObjects.Add(agentObject);
         }
-        this.bestAgentIndex = 0;
-        this.agentsObjects[bestAgentIndex].SetActive(true);
-        this.followingCamera.target = this.agentsObjects[bestAgentIndex].transform;
-        this.agents[bestAgentIndex].UseBestSkin();
-        for (int i = 0; i < this.agentsCount; i++)
+        bestAgentIndex = 0;
+        agentsObjects[bestAgentIndex].SetActive(true);
+        followingCamera.target = agentsObjects[bestAgentIndex].transform;
+        agents[bestAgentIndex].UseBestSkin();
+        for (int i = 0; i < agentsCount; i++)
         {
-            this.agentsObjects[i].SetActive(true);
+            agentsObjects[i].SetActive(true);
         }
-        TargetPositionUpdated(lastTarget);
+        targetManager.restart();
     }
 
     private void UpdateBestAgent()
     {
-        int bestAgentIndex = this.FindBestAgentIndex();
+        int bestAgentIndex = FindBestAgentIndex();
         if (bestAgentIndex != this.bestAgentIndex)
         {
-            this.agents[this.bestAgentIndex].UseRegularSkin();
-            this.agents[bestAgentIndex].UseBestSkin();
+            agents[this.bestAgentIndex].UseRegularSkin();
+            agents[bestAgentIndex].UseBestSkin();
             this.bestAgentIndex = bestAgentIndex;
-            this.followingCamera.target = this.AgentsObjects[this.bestAgentIndex].transform;
+            followingCamera.target = AgentsObjects[this.bestAgentIndex].transform;
         }
     }
 
     private int FindBestAgentIndex()
     {
         int bestAgentIndex = 0;
-        Transform bestAgent = this.agentsObjects[bestAgentIndex].transform;
+        Transform bestAgent = agentsObjects[bestAgentIndex].transform;
         float bestAgentDistance = bestAgent.position.x;
-        for (int agentIndex = 0; agentIndex < this.agentsObjects.Count; agentIndex++)
+        for (int agentIndex = 0; agentIndex < agentsObjects.Count; agentIndex++)
         {
-            if (this.agentsObjects[agentIndex].activeSelf)
+            if (agentsObjects[agentIndex].activeSelf)
             {
-                Transform agent = this.agentsObjects[agentIndex].transform;
+                Transform agent = agentsObjects[agentIndex].transform;
                 if (agent.position.x > bestAgentDistance)
                 {
                     bestAgentIndex = agentIndex;
@@ -166,7 +169,8 @@ public class EvolutionAgentsManager : MonoBehaviour
     private List<EvolutionAgent> agents;
 
     private int bestAgentIndex = 0;
-
+    private EvolutionTargetManager targetManager;
+    private EvolutionFloorManager floorManager;
     private FollowingCamera followingCamera;
     private Vector3 lastTarget;
 }

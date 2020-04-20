@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1f6303ac19f8942b95290dbf1d453a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 1738258122414462, guid: a4d95ca198767af4697eba4ae4032ce9,
+  floorPrefab: {fileID: 7990959335473837734, guid: e80598c33694b72499279ac56db51335,
     type: 3}
   maxFloorSegments: 3
   staticObstaclePrefab: {fileID: 1249729923951426, guid: de1f424386000c1438c4bcd96ea7308e,
@@ -266,8 +266,8 @@ MonoBehaviour:
   maxObstacleRotationAngle: 90
   minObstacleScale: 0.5
   maxObstacleScale: 3
-  topLeft: {x: -16.5, y: -6.5}
-  bottomRight: {x: 16.5, y: 6.5}
+  topLeft: {x: -16.5, y: -11.5}
+  bottomRight: {x: 16.5, y: 11.5}
 --- !u!114 &1111457614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +294,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 3350753395677382428, guid: 223766ebc8707eb4dbc7931fe6108493,
     type: 3}
-  agentsCount: 6
+  agentDistance: 0.5
+  agentsCount: 40
 --- !u!1 &2133087343
 GameObject:
   m_ObjectHideFlags: 0

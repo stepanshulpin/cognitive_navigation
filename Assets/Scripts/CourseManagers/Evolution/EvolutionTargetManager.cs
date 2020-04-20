@@ -15,6 +15,13 @@ public class EvolutionTargetManager : MonoBehaviour {
         }
     }
 
+    public void restart()
+    {
+        this.targetPosition = Vector3.zero;
+        this.targetPosition += TARGET_OFFSET;
+        this.agentsManager.TargetPositionUpdated(this.targetPosition);
+    }
+
     private void UpdateTargetPosition() {
         this.targetPosition += TARGET_OFFSET;
         this.agentsManager.TargetPositionUpdated(this.targetPosition);

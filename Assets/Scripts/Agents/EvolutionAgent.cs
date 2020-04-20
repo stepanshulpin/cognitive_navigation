@@ -26,7 +26,7 @@ public class EvolutionAgent : MonoBehaviour
         return isCrashed;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
         isCrashed = true;
     }
