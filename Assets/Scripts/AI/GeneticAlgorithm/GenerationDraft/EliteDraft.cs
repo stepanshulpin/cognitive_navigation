@@ -5,7 +5,7 @@ namespace AI.GeneticAlgorithm
 {
     class EliteDraft : IGeneraionDraft
     {
-        EliteDraft(Utils.Random random, double part, int newSize)
+        public EliteDraft(Utils.Random random, double part, int newSize)
         {
             this.part = part;
             this.random = random;
@@ -19,7 +19,6 @@ namespace AI.GeneticAlgorithm
             previous.AddRange(generation.Individuals);
             previous.AddRange(newbies);
             List<IChromosome> newChromosomes = selection.Select((int)Math.Floor(part * generation.Individuals.Count), generation);
-            newChromosomes.AddRange(previous);
             int tournamentSize = newSize - newChromosomes.Count;
             for (int i = 0; i < tournamentSize; i++)
             {

@@ -20,12 +20,13 @@ namespace AI.GeneticAlgorithm
             this.d = d;
         }
 
-        public List<IChromosome> Recombine(List<IChromosome> parents)
+        public IChromosome Recombine(List<IChromosome> parents)
         {
-            List<IChromosome> bestParents = parents.OrderByDescending(parent => parent.Fitness).Take(2).ToList();
-            IChromosome child = Recombine(bestParents[0], bestParents[1]);
-            parents.Add(child);
-            return parents;
+            if (parents.Count != 2)
+            {
+                throw new Exception("Recombination can be appliedd only for two parents!");
+            }
+            return Recombine(parents[0], parents[1]);
         }
 
         private IChromosome Recombine(IChromosome parent1, IChromosome parent2)

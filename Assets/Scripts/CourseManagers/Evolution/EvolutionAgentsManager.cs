@@ -58,7 +58,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             agentObject.SetActive(false);
             EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
             agents.Add(agent);
-            agent.updateFuzzyParams(new double[1] { 1 });
+            //agent.updateFuzzyParams(new double[1] { 1 });
             agentsObjects.Add(agentObject);
         }
         targetManager = GetComponent<EvolutionTargetManager>();

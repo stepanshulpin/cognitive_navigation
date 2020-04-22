@@ -8,6 +8,6 @@ namespace AI.GeneticAlgorithm
 {
     public interface IRecombination
     {
-        List<IChromosome> Recombine(List<IChromosome> parents);
+        IChromosome Recombine(List<IChromosome> parents);
     }
 }

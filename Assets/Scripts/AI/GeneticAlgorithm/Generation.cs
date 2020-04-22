@@ -30,15 +30,6 @@ namespace AI.GeneticAlgorithm
             }
         }
 
-        [Obsolete]
-        public double Fitness
-        {
-            get
-            {
-                return fitness;
-            }
-        }
-
         public Generation(int generationIndex, List<IChromosome> individuals)
         {
             this.index = generationIndex;
@@ -52,7 +43,6 @@ namespace AI.GeneticAlgorithm
         }
 
         private int index;
-        private double fitness;
         private List<IChromosome> individuals;
         private long timestamp;
     }

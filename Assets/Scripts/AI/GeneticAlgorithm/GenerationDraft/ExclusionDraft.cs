@@ -9,7 +9,7 @@ namespace AI.GeneticAlgorithm
     class ExclusionDraft : IGeneraionDraft
     {
 
-        ExclusionDraft(Utils.Random random, double part, int newSize)
+        public ExclusionDraft(Utils.Random random, double part, int newSize)
         {
             this.part = part;
             this.random = random;

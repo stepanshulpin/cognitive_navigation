@@ -37,6 +37,12 @@ namespace AI.GeneticAlgorithm
             fitness = 0.0f;
         }
 
+        public NumericChromosome(int size)
+        {
+            fitness = 0.0f;
+            genes = new double[size];
+        }
+
         public NumericChromosome(double[] genes)
         {
             this.genes = genes;
@@ -51,7 +57,7 @@ namespace AI.GeneticAlgorithm
 
         public IChromosome Clone()
         {
-            NumericChromosome res = new NumericChromosome();
+            NumericChromosome res = new NumericChromosome(genes.Length);
             genes.CopyTo(res.genes, 0);
             return res;
         }

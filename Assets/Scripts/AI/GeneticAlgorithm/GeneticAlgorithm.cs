@@ -9,6 +9,9 @@ namespace AI.GeneticAlgorithm
 {
     public class GeneticAlgorithm
     {
+        public Generation GetCurrentGeneration() {
+            return population.Generation;
+        }
 
         public GeneticAlgorithm(GeneticAlgorithmParams parameters)
         {
@@ -33,9 +36,39 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(generation);
         }
 
+        public List<IChromosome> tournamentSelection(int tournamentSize)
+        {
+            ISelection tournament = new TournamentSelection(tournamentSize, random);
+            return tournament.Select(2, GetCurrentGeneration());
+        }
+
+        public IChromosome linearRecombination(List<IChromosome> parents)
+        {
+            IRecombination recombination = new LinearRecombination(random);
+            return recombination.Recombine(parents);
+        }
+
+        public void termBoundsMutation(IChromosome individual, double probability)
+        {
+            IMutation mutation = new TermBoundsMutation(random, parameters.MinGenValue, parameters.MaxGenValue);
+            mutation.Mutate(individual, probability);
+        }
+
+        public Generation eliteDraft(Generation generation, List<IChromosome> children, double part)
+        {
+            IGeneraionDraft draft = new EliteDraft(random, part, parameters.GenerationSize);
+            return draft.Produce(generation, children);            
+        }
+
+        public void registerNewGeneration(Generation generation)
+        {
+            population.RegisterNewGeneration(generation);
+        }
+
         private Population population;
         private GeneticAlgorithmParams parameters;
         private Utils.Random random;
+
     }
 
 

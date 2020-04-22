@@ -31,7 +31,7 @@ namespace AI.GeneticAlgorithm
                     (individual, index) => participants.Contains(index)
                 ).OrderByDescending(individual => individual.Fitness).First();
                 selected.Add(winner);
-                if (!this.doesWinnerCompeteInNextRound)
+                if (!doesWinnerCompeteInNextRound)
                 {
                     individuals.Remove(winner);
                 }
