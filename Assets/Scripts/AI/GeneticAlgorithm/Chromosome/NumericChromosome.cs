@@ -1,4 +1,6 @@
-﻿namespace AI.GeneticAlgorithm
+﻿using Utils;
+
+namespace AI.GeneticAlgorithm
 {
     public class NumericChromosome : IChromosome
     {
@@ -39,7 +41,7 @@
         {
             this.genes = genes;
             fitness = 0.0f;
-        }
+        }        
 
         public void UpdateGenes(double[] genes)
         {

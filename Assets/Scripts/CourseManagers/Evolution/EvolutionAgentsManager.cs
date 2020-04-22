@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AI.GeneticAlgorithm;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ public class EvolutionAgentsManager : MonoBehaviour
 
     public float agentDistance = 2.5f;
     public int agentsCount = 5;
+    public int termParamsCount = 20;
+    public double minGenValue = -45;
+    public double maxGenValue = 45;
 
     public List<GameObject> AgentsObjects
     {
@@ -40,12 +44,21 @@ public class EvolutionAgentsManager : MonoBehaviour
         agents = new List<EvolutionAgent>();
         agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;
+        GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
+        parameters.GenerationSize = agentsCount;
+        parameters.ChromosomeSize = termParamsCount;
+        parameters.MinGenValue = minGenValue;
+        parameters.MaxGenValue = maxGenValue;
+        geneticAlgorithm = new GeneticAlgorithm(parameters);
+        geneticAlgorithm.initialize();
         for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
             GameObject agentObject = Instantiate(agentPrefab);
             agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, agentDistance);
             agentObject.SetActive(false);
-            agents.Add(agentObject.GetComponent<EvolutionAgent>());
+            EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
+            agents.Add(agent);
+            agent.updateFuzzyParams(new double[1] { 1 });
             agentsObjects.Add(agentObject);
         }
         targetManager = GetComponent<EvolutionTargetManager>();
@@ -116,7 +129,6 @@ public class EvolutionAgentsManager : MonoBehaviour
         {
             GameObject agentObject = Instantiate(agentPrefab);
             agentObject.transform.position += (agentNum - middle) * new Vector3(0, 0, agentDistance);
-            //agentObject.transform.position += new Vector3(followingCamera.target.position.x, 0, 0);
             agentObject.SetActive(false);
             agents.Add(agentObject.GetComponent<EvolutionAgent>());
             agentsObjects.Add(agentObject);
@@ -173,4 +185,5 @@ public class EvolutionAgentsManager : MonoBehaviour
     private EvolutionFloorManager floorManager;
     private FollowingCamera followingCamera;
     private Vector3 lastTarget;
+    private GeneticAlgorithm geneticAlgorithm;
 }

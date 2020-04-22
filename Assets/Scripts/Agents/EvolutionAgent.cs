@@ -46,11 +46,13 @@ public class EvolutionAgent : MonoBehaviour
         isCrashed = false;
         this.characterController = this.GetComponent<CharacterController>();
         this.originalMaterial = GetComponent<Renderer>().sharedMaterial;
-        this.sensorManager = GetComponent<SensorsManager>();
+        this.sensorManager = GetComponent<SensorsManager>();  
+    }
 
+    public void updateFuzzyParams(double[] genes)
+    {
         IFuzzyInferenceSystem fuzzyInferenceSystem = new MamdaniFuzzyInference(new Minimum(), new Maximum(), new Minimum(),
                 new Maximum(), new CentroidDefuzzifier());
-
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
         Term close = new ZShapeTerm("close", 3.0, 8.0);
@@ -120,7 +122,6 @@ public class EvolutionAgent : MonoBehaviour
 
         //fuzzyEngine.RegisterRule("IF rrs IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF rrs IS close THEN speed IS medium AND direction IS left");
-
         fuzzyEngineInput = new Dictionary<string, double>();
         fuzzyEngineInput.Add("lls", 0.0);
         fuzzyEngineInput.Add("ls", 0.0);

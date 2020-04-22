@@ -18,9 +18,15 @@
             }
         }
 
+        public Population()
+        {
+            size = 0;
+        }
+
         public void RegisterNewGeneration(Generation generation)
         {
             this.generation = generation;
+            size++;
         }
 
         private Generation generation;

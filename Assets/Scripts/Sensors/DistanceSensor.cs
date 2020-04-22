@@ -18,7 +18,7 @@ public class DistanceSensor : MonoBehaviour, ISensor {
     }
 
     public void Initialize(Vector3 direction, float minDistance, float maxDistance) {
-        Debug.Log("Initial direction " + direction.normalized.ToString());
+        //Debug.Log("Initial direction " + direction.normalized.ToString());
         this.direction = direction.normalized;
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
