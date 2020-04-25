@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AI.GeneticAlgorithm
 {
@@ -36,9 +31,23 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(generation);
         }
 
-        public List<IChromosome> tournamentSelection(int tournamentSize)
+        public void newGeneration()
         {
-            ISelection tournament = new TournamentSelection(tournamentSize, random);
+            List<IChromosome> children = new List<IChromosome>();
+            for (int i = 0; i < parameters.ChildrenSize; i++)
+            {
+                List<IChromosome> parents = tournamentSelection();
+                children.Add(linearRecombination(parents));
+            }
+            List<IChromosome> previous = GetCurrentGeneration().Individuals;
+            termBoundsMutation(previous, children);
+            Generation newGeneration = eliteDraft(children);
+            population.RegisterNewGeneration(newGeneration);
+        }
+
+        public List<IChromosome> tournamentSelection()
+        {
+            ISelection tournament = new TournamentSelection(parameters.SelectParentsTournamentSize, random);
             return tournament.Select(2, GetCurrentGeneration());
         }
 
@@ -48,21 +57,23 @@ namespace AI.GeneticAlgorithm
             return recombination.Recombine(parents);
         }
 
-        public void termBoundsMutation(IChromosome individual, double probability)
+        public void termBoundsMutation(List<IChromosome> previous, List<IChromosome> children)
         {
             IMutation mutation = new TermBoundsMutation(random, parameters.MinGenValue, parameters.MaxGenValue);
-            mutation.Mutate(individual, probability);
+            foreach (IChromosome chromosome in previous)
+            {
+                mutation.Mutate(chromosome, parameters.MutationProbability);
+            }
+            foreach (IChromosome chromosome in children)
+            {
+                mutation.Mutate(chromosome, parameters.MutationProbability);
+            }
         }
 
-        public Generation eliteDraft(Generation generation, List<IChromosome> children, double part)
+        public Generation eliteDraft(List<IChromosome> children)
         {
-            IGeneraionDraft draft = new EliteDraft(random, part, parameters.GenerationSize);
-            return draft.Produce(generation, children);            
-        }
-
-        public void registerNewGeneration(Generation generation)
-        {
-            population.RegisterNewGeneration(generation);
+            IGeneraionDraft draft = new EliteDraft(random, parameters.DraftPart, parameters.GenerationSize);
+            return draft.Produce(GetCurrentGeneration(), children);            
         }
 
         private Population population;
@@ -78,6 +89,10 @@ namespace AI.GeneticAlgorithm
         public int GenerationSize { get => generationSize; set => generationSize = value; }
         public double MinGenValue { get => minGenValue; set => minGenValue = value; }
         public double MaxGenValue { get => maxGenValue; set => maxGenValue = value; }
+        public double MutationProbability { get => mutationProbability; set => mutationProbability = value; }
+        public double DraftPart { get => draftPart; set => draftPart = value; }
+        public int ChildrenSize { get => childrenSize; set => childrenSize = value; }
+        public int SelectParentsTournamentSize { get => selectParentsTournamentSize; set => selectParentsTournamentSize = value; }
 
         public GeneticAlgorithmParams()
         {
@@ -85,20 +100,32 @@ namespace AI.GeneticAlgorithm
             generationSize = 0;
             minGenValue = 0;
             maxGenValue = 0;
+            mutationProbability = 0;
+            childrenSize = 0;
+            selectParentsTournamentSize = 0;
+            draftPart = 0;
         }
 
-        public GeneticAlgorithmParams(int chromosomeSize, int generationSize, double minGenValue, double maxGenValue)
+        public GeneticAlgorithmParams(int chromosomeSize, int generationSize, double minGenValue, double maxGenValue, double mutationProbability, int childrenSize, int selectParentsTournamentSize, double draftPart)
         {
             this.chromosomeSize = chromosomeSize;
             this.generationSize = generationSize;
             this.minGenValue = minGenValue;
             this.maxGenValue = maxGenValue;
+            this.mutationProbability = mutationProbability;
+            this.childrenSize = childrenSize;
+            this.selectParentsTournamentSize = selectParentsTournamentSize;
+            this.draftPart = draftPart;
         }
 
         private int chromosomeSize;
         private int generationSize;
         private double minGenValue;
         private double maxGenValue;
+        private double mutationProbability;
+        private int childrenSize;
+        private int selectParentsTournamentSize;
+        private double draftPart;
 
     }
 }

@@ -32,8 +32,8 @@ namespace AI.GeneticAlgorithm
 
         public Generation(int generationIndex, List<IChromosome> individuals)
         {
-            this.index = generationIndex;
-            this.timestamp = DateTime.Now.Ticks;
+            index = generationIndex;
+            timestamp = DateTime.Now.Ticks;
             this.individuals = individuals;
         }
 

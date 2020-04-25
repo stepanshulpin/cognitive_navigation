@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace AI.GeneticAlgorithm
@@ -13,7 +12,7 @@ namespace AI.GeneticAlgorithm
         public TournamentSelection(int tournamentSize, bool doesWinnerCompeteFurther, Utils.Random random)
         {
             this.tournamentSize = tournamentSize;
-            this.doesWinnerCompeteInNextRound = doesWinnerCompeteFurther;
+            doesWinnerCompeteInNextRound = doesWinnerCompeteFurther;
             this.random = random;
         }
 
@@ -24,8 +23,8 @@ namespace AI.GeneticAlgorithm
             List<IChromosome> selected = new List<IChromosome>();
             while (selected.Count < count)
             {
-                participants = Enumerable.Repeat(0, this.tournamentSize).Select(
-                individual => this.random.Next(individuals.Count)
+                participants = Enumerable.Repeat(0, tournamentSize).Select(
+                individual => random.Next(individuals.Count)
             ).ToArray();
                 IChromosome winner = individuals.Where(
                     (individual, index) => participants.Contains(index)

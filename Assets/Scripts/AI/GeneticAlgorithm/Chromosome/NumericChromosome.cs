@@ -1,6 +1,4 @@
-﻿using Utils;
-
-namespace AI.GeneticAlgorithm
+﻿namespace AI.GeneticAlgorithm
 {
     public class NumericChromosome : IChromosome
     {
@@ -51,7 +49,6 @@ namespace AI.GeneticAlgorithm
 
         public void UpdateGenes(double[] genes)
         {
-            //TODO: check
             genes.CopyTo(this.genes, 0);
         }
 
