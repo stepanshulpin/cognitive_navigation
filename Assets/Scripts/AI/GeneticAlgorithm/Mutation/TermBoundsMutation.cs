@@ -22,7 +22,7 @@ namespace AI.GeneticAlgorithm
 
             for(int geneIndex = 0; geneIndex < individual.Size; geneIndex++)
             {
-                if (random.NextDouble() > probability)
+                if (random.NextDouble() < probability)
                 {
                     genes[geneIndex] = random.Randomize<double>(min, max);
                 }
