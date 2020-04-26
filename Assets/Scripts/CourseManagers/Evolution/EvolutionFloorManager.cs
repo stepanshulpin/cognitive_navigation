@@ -22,6 +22,13 @@ public class EvolutionFloorManager : MonoBehaviour {
 
     public float maxObstacleScale = 3.0f;
 
+    [Header("Dynamic obstacles")]
+    public GameObject dynamicObstaclePrefab;
+
+    public int minDynamicObstaclesPerSegment = 0;
+
+    public int maxDynamicObstaclesPerSegment = 2;
+
     [Header("Bounds")]
     public Vector2 topLeft = Vector2.zero;
 
@@ -30,6 +37,7 @@ public class EvolutionFloorManager : MonoBehaviour {
     private void Awake() {
         segments = new Queue<GameObject>();
         segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
+        segmentDynamicObstacles = new Dictionary<int, List<GameObject>>();
         for (int segment = 0; segment < maxFloorSegments; segment++) {
             GameObject floorSegment = Instantiate(floorPrefab);
             floorSegment.SetActive(false);
@@ -41,7 +49,16 @@ public class EvolutionFloorManager : MonoBehaviour {
                 staticObstacle.transform.SetParent(floorSegment.transform);
                 segmentObstacles.Add(staticObstacle);
             }
+            List<GameObject> dynamicSegmentObstacles = new List<GameObject>();
+            for (int dynamicObstacle = 0; dynamicObstacle < maxDynamicObstaclesPerSegment; dynamicObstacle++)
+            {
+                GameObject dynamicObstacleObject = Instantiate(dynamicObstaclePrefab);
+                dynamicObstacleObject.SetActive(false);
+                dynamicObstacleObject.transform.SetParent(floorSegment.transform);
+                dynamicSegmentObstacles.Add(dynamicObstacleObject);
+            }
             segmentStaticObstacles.Add(segmentId, segmentObstacles);
+            segmentDynamicObstacles.Add(segmentId, dynamicSegmentObstacles);
             segments.Enqueue(floorSegment);
         }
         random = new System.Random();
@@ -56,6 +73,7 @@ public class EvolutionFloorManager : MonoBehaviour {
         }
         segments = new Queue<GameObject>();
         segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
+        segmentDynamicObstacles = new Dictionary<int, List<GameObject>>();
         for (int segment = 0; segment < maxFloorSegments; segment++)
         {
             GameObject floorSegment = Instantiate(floorPrefab);
@@ -69,7 +87,16 @@ public class EvolutionFloorManager : MonoBehaviour {
                 staticObstacle.transform.SetParent(floorSegment.transform);
                 segmentObstacles.Add(staticObstacle);
             }
+            List<GameObject> dynamicSegmentObstacles = new List<GameObject>();
+            for (int dynamicObstacle = 0; dynamicObstacle < maxDynamicObstaclesPerSegment; dynamicObstacle++)
+            {
+                GameObject dynamicObstacleObject = Instantiate(dynamicObstaclePrefab);
+                dynamicObstacleObject.SetActive(false);
+                dynamicObstacleObject.transform.SetParent(floorSegment.transform);
+                dynamicSegmentObstacles.Add(dynamicObstacleObject);
+            }
             segmentStaticObstacles.Add(segmentId, segmentObstacles);
+            segmentDynamicObstacles.Add(segmentId, dynamicSegmentObstacles);
             segments.Enqueue(floorSegment);
         }
         SpawnStartSegment();
@@ -122,6 +149,21 @@ public class EvolutionFloorManager : MonoBehaviour {
                 obstacle.SetActive(false);
             }
         }
+        List<GameObject> dynamicObstacles = segmentDynamicObstacles[segment.GetInstanceID()];
+        int activeDynamicObstaclesCount = random.Next(minDynamicObstaclesPerSegment, maxDynamicObstaclesPerSegment);
+        foreach (GameObject obstacle in dynamicObstacles)
+        {
+            if (activeDynamicObstaclesCount > 0)
+            {
+                RandomizeDynamicObstacle(obstacle);
+                obstacle.SetActive(true);
+                activeDynamicObstaclesCount--;
+            }
+            else
+            {
+                obstacle.SetActive(false);
+            }
+        }
     }
 
     private void RandomizeObstacle(GameObject obstacle) {
@@ -139,6 +181,39 @@ public class EvolutionFloorManager : MonoBehaviour {
         obstacle.transform.localScale = obstacleScale;
         float randomRotationAngle = (float)random.NextDouble() * maxObstacleRotationAngle;
         obstacle.transform.localRotation = Quaternion.AngleAxis(randomRotationAngle, Vector3.up);
+    }
+
+    private void RandomizeDynamicObstacle(GameObject obstacle)
+    {
+        Vector3 obstaclePosition = new Vector3(
+            (float)random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
+            0.5f,
+            (float)random.NextDouble() * (topLeft.y - bottomRight.y) + bottomRight.y
+        );
+        obstacle.transform.localPosition = obstaclePosition;
+        Vector3 obstacleScale = new Vector3(
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale,
+            1.0f,
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale
+        );
+        obstacle.transform.localScale = obstacleScale;
+        float randomRotationAngle = (float)random.NextDouble() * maxObstacleRotationAngle;
+        obstacle.transform.localRotation = Quaternion.AngleAxis(randomRotationAngle, Vector3.up);
+        Vector3 animationToPosition = new Vector3(
+            (float)random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
+            0.5f,
+            (float)random.NextDouble() * (topLeft.y - bottomRight.y) + bottomRight.y
+        );
+        AnimationClip clip = new AnimationClip();
+        clip.legacy = true;
+        clip.SetCurve("", typeof(Transform), "localPosition.x", AnimationCurve.Linear(0, obstaclePosition.x, 5, animationToPosition.x));
+        clip.SetCurve("", typeof(Transform), "localPosition.y", AnimationCurve.Linear(0, 0.5f, 5, 0.5f));
+        clip.SetCurve("", typeof(Transform), "localPosition.z", AnimationCurve.Linear(0, obstaclePosition.z, 5, animationToPosition.z));
+        clip.wrapMode = WrapMode.PingPong;
+
+        Animation anim = obstacle.GetComponent<Animation>();
+        anim.AddClip(clip, "bounds");
+        anim.Play("bounds");
     }
 
     private Queue<GameObject> segments;
