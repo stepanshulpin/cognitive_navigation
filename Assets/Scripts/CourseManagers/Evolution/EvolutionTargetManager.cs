@@ -7,10 +7,15 @@ public class EvolutionTargetManager : MonoBehaviour {
     }
 
     private void LateUpdate() {
-        foreach (GameObject agent in this.agentsManager.AgentsObjects) {
-            if ((targetPosition - agent.transform.position).magnitude <= MIN_DISTANCE_TO_TARGET_FOR_UPDATE) {
-                this.UpdateTargetPosition();
-                break;
+        if (!agentsManager.isRestarting)
+        {
+            foreach (GameObject agent in this.agentsManager.AgentsObjects)
+            {
+                if ((targetPosition - agent.transform.position).magnitude <= MIN_DISTANCE_TO_TARGET_FOR_UPDATE)
+                {
+                    this.UpdateTargetPosition();
+                    break;
+                }
             }
         }
     }

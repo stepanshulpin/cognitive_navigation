@@ -31,6 +31,16 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(generation);
         }
 
+        public double[] getGenesFromChromosome(int chromosome)
+        {
+            return population.Generation.Individuals[chromosome].Genes;
+        }
+
+        public void updateFitnessForChromosome(int chromosome, double fitness)
+        {
+            population.Generation.Individuals[chromosome].Fitness = fitness;
+        }
+
         public void newGeneration()
         {
             List<IChromosome> children = new List<IChromosome>();

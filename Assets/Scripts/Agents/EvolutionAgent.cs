@@ -46,17 +46,28 @@ public class EvolutionAgent : MonoBehaviour
         isCrashed = false;
         this.characterController = this.GetComponent<CharacterController>();
         this.originalMaterial = GetComponent<Renderer>().sharedMaterial;
-        this.sensorManager = GetComponent<SensorsManager>();  
+        this.sensorManager = GetComponent<SensorsManager>();
+    }
+
+    private void Start()
+    {
+        seconds = new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
     }
 
     public void updateFuzzyParams(double[] genes)
     {
+        if (genes.Length != 20)
+        {
+            throw new Exception("Incorrect genes size");
+        }
+
         IFuzzyInferenceSystem fuzzyInferenceSystem = new MamdaniFuzzyInference(new Minimum(), new Maximum(), new Minimum(),
                 new Maximum(), new CentroidDefuzzifier());
+
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
-        Term close = new ZShapeTerm("close", 3.0, 8.0);
-        Term far = new SShapeTerm("far", 7.0, 12.0);
+        Term close = new ZShapeTerm("close", genes[0], genes[1]);
+        Term far = new SShapeTerm("far", genes[2], genes[3]);
 
         LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);
         lls.AddTerm(close);
@@ -84,9 +95,9 @@ public class EvolutionAgent : MonoBehaviour
         fuzzyEngine.RegisterInputVariable(rrs);
 
 
-        Term slow = new ZShapeTerm("slow", 0.0, 4.5);
-        Term medium = new TrapezoidalTerm("medium", 4.0, 5.0, 7.0, 8.0);
-        Term fast = new SShapeTerm("fast", 7.5, 9.0);
+        Term slow = new ZShapeTerm("slow", genes[4], genes[5]);
+        Term medium = new TrapezoidalTerm("medium", genes[6], genes[7], genes[8], genes[9]);
+        Term fast = new SShapeTerm("fast", genes[10], genes[11]);
 
         LinguisticVariable speed = new LinguisticVariable("speed", 0.0, 10.0);
         speed.AddTerm(slow);
@@ -94,9 +105,9 @@ public class EvolutionAgent : MonoBehaviour
         speed.AddTerm(fast);
         fuzzyEngine.RegisterOutputVariable(speed);
 
-        Term left = new ZShapeTerm("left", -35.0, -10.0);
-        Term forward = new TrapezoidalTerm("forward", -15.0, -10.0, 10.0, 15.0);
-        Term right = new SShapeTerm("right", 10.0, 35.0);
+        Term left = new ZShapeTerm("left", genes[12], genes[13]);
+        Term forward = new TrapezoidalTerm("forward", genes[14], genes[15], genes[16], genes[17]);
+        Term right = new SShapeTerm("right", genes[18], genes[19]);
 
         LinguisticVariable direction = new LinguisticVariable("direction", -45.0, 45.0);
         direction.AddTerm(left);
@@ -122,40 +133,66 @@ public class EvolutionAgent : MonoBehaviour
 
         //fuzzyEngine.RegisterRule("IF rrs IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF rrs IS close THEN speed IS medium AND direction IS left");
+
         fuzzyEngineInput = new Dictionary<string, double>();
         fuzzyEngineInput.Add("lls", 0.0);
         fuzzyEngineInput.Add("ls", 0.0);
         fuzzyEngineInput.Add("fs", 0.0);
         fuzzyEngineInput.Add("rs", 0.0);
         fuzzyEngineInput.Add("rrs", 0.0);
+
+        isInit = true;
     }
 
     private void Update()
     {
-        if (this.hasTarget)
+        double newSeconds = new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
+        if (newSeconds - seconds > 10)
         {
-            fuzzyEngineInput["lls"] = this.sensorManager.SensorsOutput[0];
-            fuzzyEngineInput["ls"] = this.sensorManager.SensorsOutput[1];
-            fuzzyEngineInput["fs"] = this.sensorManager.SensorsOutput[2];
-            fuzzyEngineInput["rs"] = this.sensorManager.SensorsOutput[3];
-            fuzzyEngineInput["rrs"] = this.sensorManager.SensorsOutput[4];
-            fuzzyEngineOutput = fuzzyEngine.Process(fuzzyEngineInput);
-            Vector3 desiredDirection = this.GetMovementDirection(this.targetPosition);
-            Quaternion targetRotation = Quaternion.LookRotation(desiredDirection);
-            float movementSpeed = this.GetMovementSpeed(this.targetPosition);
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, targetRotation, this.turnSpeed * Time.deltaTime);
-            if (Mathf.Approximately(this.characterController.velocity.magnitude, 0.0f))
+            if (transform.position.x - previousPosition < 10)
             {
-                if (Quaternion.Angle(this.transform.rotation, targetRotation) < MIN_ANGLE_THRESHOLD)
-                {
-                    this.characterController.Move(this.transform.forward * movementSpeed * Time.deltaTime);
-                }
-            }
-            else
-            {
-                this.characterController.Move(this.transform.forward * movementSpeed * Time.deltaTime);
+                isCrashed = true;
+                Debug.Log("Kill slow agent");
             }
 
+            seconds = newSeconds;
+            previousPosition = transform.position.x;
+        }
+        if (isInit)
+        {
+            if (hasTarget)
+            {
+                fuzzyEngineInput["lls"] = sensorManager.SensorsOutput[0];
+                fuzzyEngineInput["ls"] = sensorManager.SensorsOutput[1];
+                fuzzyEngineInput["fs"] = sensorManager.SensorsOutput[2];
+                fuzzyEngineInput["rs"] = sensorManager.SensorsOutput[3];
+                fuzzyEngineInput["rrs"] = sensorManager.SensorsOutput[4];
+                fuzzyEngineOutput = fuzzyEngine.Process(fuzzyEngineInput);
+                if (!fuzzyEngineOutput.ContainsKey("direction") || !fuzzyEngineOutput.ContainsKey("speed") ||
+                    double.IsNaN(fuzzyEngineOutput["direction"]) || double.IsNaN(fuzzyEngineOutput["speed"]))
+                {
+                    isCrashed = true;
+                }
+                else
+                {
+                    Vector3 desiredDirection = GetMovementDirection(targetPosition);
+                    Quaternion targetRotation = Quaternion.LookRotation(desiredDirection);
+                    float movementSpeed = GetMovementSpeed(targetPosition);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+                    if (Mathf.Approximately(characterController.velocity.magnitude, 0.0f))
+                    {
+                        if (Quaternion.Angle(transform.rotation, targetRotation) < MIN_ANGLE_THRESHOLD)
+                        {
+                            characterController.Move(transform.forward * movementSpeed * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        characterController.Move(transform.forward * movementSpeed * Time.deltaTime);
+                    }
+
+                }
+            }
         }
     }
 
@@ -195,6 +232,11 @@ public class EvolutionAgent : MonoBehaviour
     private Dictionary<string, double> fuzzyEngineOutput;
 
     private bool isCrashed;
+
+    private bool isInit = false;
+
+    private double seconds = 0;
+    private double previousPosition = 0;
 
     private void junk()
     {

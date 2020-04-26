@@ -28,58 +28,67 @@ public class EvolutionFloorManager : MonoBehaviour {
     public Vector2 bottomRight = Vector2.one;
 
     private void Awake() {
-        this.segments = new Queue<GameObject>();
-        this.segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
-        for (int segment = 0; segment < this.maxFloorSegments; segment++) {
-            GameObject floorSegment = Instantiate(this.floorPrefab);
+        segments = new Queue<GameObject>();
+        segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
+        for (int segment = 0; segment < maxFloorSegments; segment++) {
+            GameObject floorSegment = Instantiate(floorPrefab);
             floorSegment.SetActive(false);
             int segmentId = floorSegment.GetInstanceID();
             List<GameObject> segmentObstacles = new List<GameObject>();
             for (int obstacle = 0; obstacle < maxStaticObstaclesPerSegment; obstacle++) {
-                GameObject staticObstacle = Instantiate(this.staticObstaclePrefab);
+                GameObject staticObstacle = Instantiate(staticObstaclePrefab);
                 staticObstacle.SetActive(false);
                 staticObstacle.transform.SetParent(floorSegment.transform);
                 segmentObstacles.Add(staticObstacle);
             }
-            this.segmentStaticObstacles.Add(segmentId, segmentObstacles);
-            this.segments.Enqueue(floorSegment);
+            segmentStaticObstacles.Add(segmentId, segmentObstacles);
+            segments.Enqueue(floorSegment);
         }
-        this.random = new System.Random();
-        this.agentsManager = GetComponent<EvolutionAgentsManager>();
+        random = new System.Random();
+        agentsManager = GetComponent<EvolutionAgentsManager>();
     }
 
     public void restart()
     {
-        this.segments = new Queue<GameObject>();
-        this.segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
-        for (int segment = 0; segment < this.maxFloorSegments; segment++)
+        foreach(GameObject gameObject in segments)
         {
-            GameObject floorSegment = Instantiate(this.floorPrefab);
+            Destroy(gameObject);
+        }
+        segments = new Queue<GameObject>();
+        segmentStaticObstacles = new Dictionary<int, List<GameObject>>();
+        for (int segment = 0; segment < maxFloorSegments; segment++)
+        {
+            GameObject floorSegment = Instantiate(floorPrefab);
             floorSegment.SetActive(false);
             int segmentId = floorSegment.GetInstanceID();
             List<GameObject> segmentObstacles = new List<GameObject>();
             for (int obstacle = 0; obstacle < maxStaticObstaclesPerSegment; obstacle++)
             {
-                GameObject staticObstacle = Instantiate(this.staticObstaclePrefab);
+                GameObject staticObstacle = Instantiate(staticObstaclePrefab);
                 staticObstacle.SetActive(false);
                 staticObstacle.transform.SetParent(floorSegment.transform);
                 segmentObstacles.Add(staticObstacle);
             }
-            this.segmentStaticObstacles.Add(segmentId, segmentObstacles);
-            this.segments.Enqueue(floorSegment);
+            segmentStaticObstacles.Add(segmentId, segmentObstacles);
+            segments.Enqueue(floorSegment);
         }
-        this.SpawnStartSegment();
+        SpawnStartSegment();
     }
 
     private void Start() {
-        this.SpawnStartSegment();
+        SpawnStartSegment();
     }
 
     private void LateUpdate() {
-        foreach (GameObject agent in this.agentsManager.AgentsObjects) {
-            if (agent.transform.position.x > this.lastSpawnedSegmentPosition.x) {
-                this.SpawnNewSegment();
-                break;
+        if (!agentsManager.isRestarting)
+        {
+            foreach (GameObject agent in agentsManager.AgentsObjects)
+            {
+                if (agent.transform.position.x > lastSpawnedSegmentPosition.x)
+                {
+                    SpawnNewSegment();
+                    break;
+                }
             }
         }
     }
@@ -87,23 +96,23 @@ public class EvolutionFloorManager : MonoBehaviour {
     private void SpawnStartSegment() {
         GameObject newSegment = segments.Dequeue();
         newSegment.transform.position = Vector3.zero;
-        this.lastSpawnedSegmentPosition = Vector3.zero;
+        lastSpawnedSegmentPosition = Vector3.zero;
         newSegment.SetActive(true);
-        this.segments.Enqueue(newSegment);
+        segments.Enqueue(newSegment);
     }
     private void SpawnNewSegment() {
-        Vector3 position = this.lastSpawnedSegmentPosition + OFFSET_BETWEEN_FLOOR_SEGMENTS;
+        Vector3 position = lastSpawnedSegmentPosition + OFFSET_BETWEEN_FLOOR_SEGMENTS;
         GameObject newSegment = segments.Dequeue();
         newSegment.transform.position = position;
-        this.lastSpawnedSegmentPosition = position;
+        lastSpawnedSegmentPosition = position;
         newSegment.SetActive(true);
-        this.segments.Enqueue(newSegment);
-        this.InitializeObstacles(newSegment);
+        segments.Enqueue(newSegment);
+        InitializeObstacles(newSegment);
     }    
 
     private void InitializeObstacles(GameObject segment) {
-        List<GameObject> obstacles = this.segmentStaticObstacles[segment.GetInstanceID()];
-        int activeObstaclesCount = this.random.Next(this.minStaticObstaclesPerSegment, this.maxStaticObstaclesPerSegment);
+        List<GameObject> obstacles = segmentStaticObstacles[segment.GetInstanceID()];
+        int activeObstaclesCount = random.Next(minStaticObstaclesPerSegment, maxStaticObstaclesPerSegment);
         foreach (GameObject obstacle in obstacles) {
             if (activeObstaclesCount > 0) {
                 this.RandomizeObstacle(obstacle);
@@ -117,18 +126,18 @@ public class EvolutionFloorManager : MonoBehaviour {
 
     private void RandomizeObstacle(GameObject obstacle) {
         Vector3 obstaclePosition = new Vector3(
-            (float)this.random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
+            (float)random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
             0.5f,
-            (float)this.random.NextDouble() * (topLeft.y - bottomRight.y) + bottomRight.y
+            (float)random.NextDouble() * (topLeft.y - bottomRight.y) + bottomRight.y
         );
         obstacle.transform.localPosition = obstaclePosition;
         Vector3 obstacleScale = new Vector3(
-            (float)this.random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale,
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale,
             1.0f,
-            (float)this.random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale
         );
         obstacle.transform.localScale = obstacleScale;
-        float randomRotationAngle = (float)this.random.NextDouble() * this.maxObstacleRotationAngle;
+        float randomRotationAngle = (float)random.NextDouble() * maxObstacleRotationAngle;
         obstacle.transform.localRotation = Quaternion.AngleAxis(randomRotationAngle, Vector3.up);
     }
 
