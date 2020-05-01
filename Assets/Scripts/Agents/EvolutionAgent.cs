@@ -57,11 +57,6 @@ public class EvolutionAgent : MonoBehaviour
 
     public void updateFuzzyParams(FuzzyChromosome chromosome)
     {
-        if (chromosome.Size != 20)
-        {
-            throw new Exception("Incorrect genes size");
-        }
-
         IFuzzyInferenceSystem fuzzyInferenceSystem = new MamdaniFuzzyInference(new Minimum(), new Maximum(), new Minimum(),
                 new Maximum(), new CentroidDefuzzifier());
 
