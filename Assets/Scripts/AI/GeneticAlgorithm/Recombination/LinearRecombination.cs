@@ -40,10 +40,14 @@ namespace AI.GeneticAlgorithm
         {
             int size = parent1.Size;
             IChromosome child = parent1.Clone();
+            double[] genes = child.Genes;
+            double[] parent1Genes = parent1.Genes;
+            double[] parent2Genes = parent2.Genes;
             for (int gen = 0; gen < size; gen++)
             {
-                child.Genes[gen] += alpha * (parent2.Genes[gen] - parent1.Genes[gen]);
+                genes[gen] += alpha * (parent2Genes[gen] - parent1Genes[gen]);
             }
+            child.UpdateGenes(genes);
             return child;
         }
 

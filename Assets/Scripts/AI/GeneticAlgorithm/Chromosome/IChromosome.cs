@@ -20,7 +20,10 @@ namespace AI.GeneticAlgorithm
             get;
         }
 
+        bool hasBounds();
+
         void UpdateGenes(double[] genes);
         IChromosome Clone();
+        Tuple<double, double> getRanges(int geneIndex);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace AI.GeneticAlgorithm
+﻿using System;
+
+namespace AI.GeneticAlgorithm
 {
     public class NumericChromosome : IChromosome
     {
@@ -57,6 +59,16 @@
             NumericChromosome res = new NumericChromosome(genes.Length);
             genes.CopyTo(res.genes, 0);
             return res;
+        }
+
+        public bool hasBounds()
+        {
+            return false;
+        }
+
+        public Tuple<double, double> getRanges(int geneIndex)
+        {
+            throw new NotImplementedException();
         }
 
         private double fitness;

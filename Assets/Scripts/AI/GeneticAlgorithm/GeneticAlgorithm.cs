@@ -31,9 +31,38 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(generation);
         }
 
+        public void initializeFuzzyChromosomes(List<FuzzyGene> fuzzyGenes)
+        {
+            population = new Population();
+            List<IChromosome> individuals = new List<IChromosome>();
+            for (int ind = 0; ind < parameters.GenerationSize; ind++)
+            {
+                FuzzyChromosome chromosome = new FuzzyChromosome();
+                foreach(FuzzyGene gene in fuzzyGenes)
+                {
+                    FuzzyGene createdGen = gene.Clone();
+                    double[] values = new double[gene.Size];
+                    for (int index = 0; index < gene.Size; index++)
+                    {
+                        values[index] = random.Randomize(gene.MinValue, gene.MaxValue);
+                    }
+                    createdGen.UpdateValues(values);
+                    chromosome.AddFuzzyGene(createdGen);
+                }
+                individuals.Add(chromosome);
+            }
+            Generation generation = new Generation(population.Size, individuals);
+            population.RegisterNewGeneration(generation);
+        }
+
         public double[] getGenesFromChromosome(int chromosome)
         {
             return population.Generation.Individuals[chromosome].Genes;
+        }
+
+        public FuzzyChromosome getFuzzyChromosome(int chromosome)
+        {
+            return (FuzzyChromosome)population.Generation.Individuals[chromosome];
         }
 
         public void updateFitnessForChromosome(int chromosome, double fitness)
@@ -55,6 +84,20 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(newGeneration);
         }
 
+        public void newGenerationFuzzy()
+        {
+            List<IChromosome> children = new List<IChromosome>();
+            for (int i = 0; i < parameters.ChildrenSize; i++)
+            {
+                List<IChromosome> parents = tournamentSelection();
+                children.Add(linearRecombination(parents));
+            }
+            List<IChromosome> previous = GetCurrentGeneration().Individuals;
+            termBoundsMutationFuzzy(previous, children);
+            Generation newGeneration = eliteDraft(children);
+            population.RegisterNewGeneration(newGeneration);
+        }
+
         public List<IChromosome> tournamentSelection()
         {
             ISelection tournament = new TournamentSelection(parameters.SelectParentsTournamentSize, random);
@@ -70,6 +113,19 @@ namespace AI.GeneticAlgorithm
         public void termBoundsMutation(List<IChromosome> previous, List<IChromosome> children)
         {
             IMutation mutation = new TermBoundsMutation(random, parameters.MinGenValue, parameters.MaxGenValue);
+            foreach (IChromosome chromosome in previous)
+            {
+                mutation.Mutate(chromosome, parameters.MutationProbability);
+            }
+            foreach (IChromosome chromosome in children)
+            {
+                mutation.Mutate(chromosome, parameters.MutationProbability);
+            }
+        }
+
+        public void termBoundsMutationFuzzy(List<IChromosome> previous, List<IChromosome> children)
+        {
+            IMutation mutation = new TermBoundsMutation(random);
             foreach (IChromosome chromosome in previous)
             {
                 mutation.Mutate(chromosome, parameters.MutationProbability);

@@ -261,15 +261,15 @@ MonoBehaviour:
   maxFloorSegments: 10
   staticObstaclePrefab: {fileID: 1249729923951426, guid: de1f424386000c1438c4bcd96ea7308e,
     type: 3}
-  minStaticObstaclesPerSegment: 4
-  maxStaticObstaclesPerSegment: 12
+  minStaticObstaclesPerSegment: 6
+  maxStaticObstaclesPerSegment: 15
   maxObstacleRotationAngle: 90
   minObstacleScale: 0.5
   maxObstacleScale: 3
   dynamicObstaclePrefab: {fileID: 1767218681756408, guid: 1d5d7c17f5b84404b9bd7b2157da5cfc,
     type: 3}
   minDynamicObstaclesPerSegment: 0
-  maxDynamicObstaclesPerSegment: 2
+  maxDynamicObstaclesPerSegment: 3
   topLeft: {x: -16.5, y: -11.5}
   bottomRight: {x: 16.5, y: 11.5}
 --- !u!114 &1111457614
@@ -301,12 +301,10 @@ MonoBehaviour:
   agentDistance: 0.2
   agentsCount: 100
   termParamsCount: 20
-  minGenValue: -45
-  maxGenValue: 45
-  mutationProbability: 0.1
+  mutationProbability: 0.2
   childrenSize: 80
   selectParentsTournamentSize: 80
-  draftPart: 0.2
+  draftPart: 0.3
   maxIterationCount: 750
   targetFitness: 1500
 --- !u!1 &2133087343

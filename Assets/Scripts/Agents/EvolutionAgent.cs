@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AI.FuzzyLogic;
 using AI.FuzzyLogic.FuzzyInference;
 using AI.FuzzyLogic.Terms;
+using AI.GeneticAlgorithm;
 using UnityEngine;
 
 public class EvolutionAgent : MonoBehaviour
@@ -54,9 +55,9 @@ public class EvolutionAgent : MonoBehaviour
         seconds = new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
     }
 
-    public void updateFuzzyParams(double[] genes)
+    public void updateFuzzyParams(FuzzyChromosome chromosome)
     {
-        if (genes.Length != 20)
+        if (chromosome.Size != 20)
         {
             throw new Exception("Incorrect genes size");
         }
@@ -66,8 +67,8 @@ public class EvolutionAgent : MonoBehaviour
 
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
-        Term close = new ZShapeTerm("close", genes[0], genes[1]);
-        Term far = new SShapeTerm("far", genes[2], genes[3]);
+        Term close = new ZShapeTerm("close", chromosome.FuzzyGenes[0].Values[0], chromosome.FuzzyGenes[0].Values[1]);
+        Term far = new SShapeTerm("far", chromosome.FuzzyGenes[1].Values[0], chromosome.FuzzyGenes[1].Values[1]);
 
         LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);
         lls.AddTerm(close);
@@ -95,9 +96,9 @@ public class EvolutionAgent : MonoBehaviour
         fuzzyEngine.RegisterInputVariable(rrs);
 
 
-        Term slow = new ZShapeTerm("slow", genes[4], genes[5]);
-        Term medium = new TrapezoidalTerm("medium", genes[6], genes[7], genes[8], genes[9]);
-        Term fast = new SShapeTerm("fast", genes[10], genes[11]);
+        Term slow = new ZShapeTerm("slow", chromosome.FuzzyGenes[2].Values[0], chromosome.FuzzyGenes[2].Values[1]);
+        Term medium = new TrapezoidalTerm("medium", chromosome.FuzzyGenes[3].Values[0], chromosome.FuzzyGenes[3].Values[1], chromosome.FuzzyGenes[3].Values[2], chromosome.FuzzyGenes[3].Values[3]);
+        Term fast = new SShapeTerm("fast", chromosome.FuzzyGenes[4].Values[0], chromosome.FuzzyGenes[4].Values[1]);
 
         LinguisticVariable speed = new LinguisticVariable("speed", 0.0, 10.0);
         speed.AddTerm(slow);
@@ -105,9 +106,9 @@ public class EvolutionAgent : MonoBehaviour
         speed.AddTerm(fast);
         fuzzyEngine.RegisterOutputVariable(speed);
 
-        Term left = new ZShapeTerm("left", genes[12], genes[13]);
-        Term forward = new TrapezoidalTerm("forward", genes[14], genes[15], genes[16], genes[17]);
-        Term right = new SShapeTerm("right", genes[18], genes[19]);
+        Term left = new ZShapeTerm("left", chromosome.FuzzyGenes[5].Values[0], chromosome.FuzzyGenes[5].Values[1]);
+        Term forward = new TrapezoidalTerm("forward", chromosome.FuzzyGenes[6].Values[0], chromosome.FuzzyGenes[6].Values[1], chromosome.FuzzyGenes[6].Values[2], chromosome.FuzzyGenes[6].Values[3]);
+        Term right = new SShapeTerm("right", chromosome.FuzzyGenes[7].Values[0], chromosome.FuzzyGenes[7].Values[1]);
 
         LinguisticVariable direction = new LinguisticVariable("direction", -45.0, 45.0);
         direction.AddTerm(left);

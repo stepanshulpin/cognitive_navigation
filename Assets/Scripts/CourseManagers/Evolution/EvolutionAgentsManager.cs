@@ -1,4 +1,5 @@
-﻿using AI.GeneticAlgorithm;
+﻿using AI.FuzzyLogic.Terms;
+using AI.GeneticAlgorithm;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,10 +12,10 @@ public class EvolutionAgentsManager : MonoBehaviour
     public GameObject agentPrefab;
 
     public float agentDistance = 2.5f;
+
+    [Header("Genetic Params")]
     public int agentsCount = 5;
     public int termParamsCount = 20;
-    public double minGenValue = -45;
-    public double maxGenValue = 45;
     public double mutationProbability = 0.2;
     public int childrenSize = 4;
     public int selectParentsTournamentSize = 4;
@@ -54,8 +55,6 @@ public class EvolutionAgentsManager : MonoBehaviour
         GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
         parameters.GenerationSize = agentsCount;
         parameters.ChromosomeSize = termParamsCount;
-        parameters.MinGenValue = minGenValue;
-        parameters.MaxGenValue = maxGenValue;
         parameters.MutationProbability = mutationProbability;
         parameters.ChildrenSize = childrenSize;
         parameters.SelectParentsTournamentSize = selectParentsTournamentSize;
@@ -70,7 +69,19 @@ public class EvolutionAgentsManager : MonoBehaviour
         agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;        
         geneticAlgorithm = new GeneticAlgorithm(setParams());
-        geneticAlgorithm.initialize();
+        List<FuzzyGene> genes = new List<FuzzyGene>();
+        genes.Add(new FuzzyGene(TermType.ZShape, 0, 15, 2));
+        genes.Add(new FuzzyGene(TermType.SShape, 0, 15, 2));
+
+        genes.Add(new FuzzyGene(TermType.ZShape, 0, 10, 2));
+        genes.Add(new FuzzyGene(TermType.Trapezodial, 0, 10, 4));
+        genes.Add(new FuzzyGene(TermType.SShape, 0, 10, 2));
+
+        genes.Add(new FuzzyGene(TermType.ZShape, -45, 45, 2));
+        genes.Add(new FuzzyGene(TermType.Trapezodial, -45, 45, 4));
+        genes.Add(new FuzzyGene(TermType.SShape, -45, 45, 2));
+
+        geneticAlgorithm.initializeFuzzyChromosomes(genes);
         for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
             GameObject agentObject = Instantiate(agentPrefab);
@@ -78,7 +89,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             agentObject.SetActive(false);
             EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
             agents.Add(agent);
-            agent.updateFuzzyParams(geneticAlgorithm.getGenesFromChromosome(agentNum));
+            agent.updateFuzzyParams(geneticAlgorithm.getFuzzyChromosome(agentNum));
             agentsObjects.Add(agentObject);
         }
         targetManager = GetComponent<EvolutionTargetManager>();
@@ -170,7 +181,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             floorManager.restart();
             agents = new List<EvolutionAgent>();
             agentsObjects = new List<GameObject>();
-            geneticAlgorithm.newGeneration();
+            geneticAlgorithm.newGenerationFuzzy();
             int middle = agentsCount / 2 - 1;
             for (int agentNum = 0; agentNum < agentsCount; agentNum++)
             {
@@ -179,7 +190,7 @@ public class EvolutionAgentsManager : MonoBehaviour
                 agentObject.SetActive(false);
                 EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
                 agents.Add(agent);
-                agent.updateFuzzyParams(geneticAlgorithm.getGenesFromChromosome(agentNum));
+                agent.updateFuzzyParams(geneticAlgorithm.getFuzzyChromosome(agentNum));
                 agentsObjects.Add(agentObject);
             }
             bestAgentIndex = 0;
