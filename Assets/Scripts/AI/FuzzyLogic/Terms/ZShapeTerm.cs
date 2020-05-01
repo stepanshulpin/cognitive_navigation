@@ -8,6 +8,12 @@ namespace AI.FuzzyLogic.Terms {
             this.end = end;
         }
 
+        public ZShapeTerm(string name) : base(name)
+        {
+            start = 0;
+            end = 0;
+        }
+
         public override double Membership(double x) {
             if (x <= start) {
                 return 1.0;
@@ -50,6 +56,29 @@ namespace AI.FuzzyLogic.Terms {
             return Terms.TermType.ZShape;
         }
 
+        public override int Size()
+        {
+            return 2;
+        }
+
+        public override Term Clone()
+        {
+            return new ZShapeTerm(name, start, end);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            start = values[0];
+            end = values[1];
+        }
+
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = start;
+            values[1] = end;
+            return values;
+        }
 
         private double start;
 

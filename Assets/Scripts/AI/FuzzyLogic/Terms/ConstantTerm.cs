@@ -18,18 +18,32 @@ namespace AI.FuzzyLogic.Terms {
 
         public override List<double> GetGenericParameters()
         {
-            List<double> parameters = new List<double>();
-            parameters.Add(value);
-            return parameters;
+            throw new NotImplementedException();
         }
 
         public override void Update(List<double> parameters)
         {
-            if (parameters.Count != 1)
-            {
-                throw new ArgumentException("Invalid parameters size");
-            }
-            value = parameters[0];
+            throw new NotImplementedException();
+        }
+
+        public override int Size()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Term Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetValues(double[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override double[] GetValues()
+        {
+            throw new NotImplementedException();
         }
 
         private double value;

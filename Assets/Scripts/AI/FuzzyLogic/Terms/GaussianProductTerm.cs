@@ -23,24 +23,12 @@ namespace AI.FuzzyLogic.Terms {
         }
         public override List<double> GetGenericParameters()
         {
-            List<double> parameters = new List<double>();
-            parameters.Add(meanA);
-            parameters.Add(stdA);
-            parameters.Add(meanB);
-            parameters.Add(stdB);
-            return parameters;
+            throw new NotImplementedException();
         }
 
         public override void Update(List<double> parameters)
         {
-            if (parameters.Count != 4)
-            {
-                throw new ArgumentException("Invalid parameters size");
-            }
-            meanA = parameters[0];
-            stdA = parameters[1];
-            meanB = parameters[2];
-            stdB = parameters[3];
+            throw new NotImplementedException();
         }
 
         public override TermType TermType()
@@ -48,6 +36,25 @@ namespace AI.FuzzyLogic.Terms {
             return Terms.TermType.GaussianProduct;
         }
 
+        public override int Size()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Term Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetValues(double[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override double[] GetValues()
+        {
+            throw new NotImplementedException();
+        }
 
         private double meanA;
 

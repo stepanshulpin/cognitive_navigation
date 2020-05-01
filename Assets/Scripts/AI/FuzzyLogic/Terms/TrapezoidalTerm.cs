@@ -10,6 +10,14 @@ namespace AI.FuzzyLogic.Terms {
             this.d = d;
         }
 
+        public TrapezoidalTerm(string name) : base(name)
+        {
+            a = 0;
+            b = 0;
+            c = 0;
+            d = 0;
+        }
+
         public override double Membership(double x) {
             if (x <= a || x >= d) {
                 return 0.0;
@@ -52,6 +60,33 @@ namespace AI.FuzzyLogic.Terms {
         public override TermType TermType()
         {
             return Terms.TermType.Trapezodial;
+        }
+
+        public override int Size()
+        {
+            return 4;
+        }
+
+        public override Term Clone()
+        {
+            return new TrapezoidalTerm(name, a, b, c, d);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            a = values[0];
+            b = values[1];
+            c = values[2];
+            d = values[3];
+        }
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = a;
+            values[1] = b;
+            values[2] = c;
+            values[3] = d;
+            return values;
         }
 
         private double a;

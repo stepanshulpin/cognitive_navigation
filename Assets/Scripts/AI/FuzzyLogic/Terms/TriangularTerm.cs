@@ -9,6 +9,13 @@ namespace AI.FuzzyLogic.Terms {
             this.c = c;
         }
 
+        public TriangularTerm(string name) : base(name)
+        {
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+
         public override double Membership(double x) {
             if (x <= a || x >= c) {
                 return 0.0;
@@ -52,6 +59,30 @@ namespace AI.FuzzyLogic.Terms {
             return Terms.TermType.Triangular;
         }
 
+        public override int Size()
+        {
+            return 3;
+        }
+
+        public override Term Clone()
+        {
+            return new TriangularTerm(name, a, b, c);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            a = values[0];
+            b = values[1];
+            c = values[2];
+        }
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = a;
+            values[1] = b;
+            values[2] = c;
+            return values;
+        }
 
         private double a;
 

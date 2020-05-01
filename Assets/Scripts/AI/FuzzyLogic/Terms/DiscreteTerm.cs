@@ -51,6 +51,26 @@ namespace AI.FuzzyLogic.Terms {
             throw new NotImplementedException();
         }
 
+        public override int Size()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Term Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetValues(double[] values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override double[] GetValues()
+        {
+            throw new NotImplementedException();
+        }
+
         private double[] x;
 
         private double[] y;

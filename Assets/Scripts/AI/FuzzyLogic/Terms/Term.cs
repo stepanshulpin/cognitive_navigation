@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AI.FuzzyLogic.Terms {
 
@@ -27,18 +28,22 @@ namespace AI.FuzzyLogic.Terms {
                 return name;
             }
         }
-        public abstract TermType TermType();
-
 
         public Term(string name) {
             this.name = name;
         }
 
+        public abstract int Size();
+        public abstract TermType TermType();
         public abstract double Membership(double x);
         public abstract List<double> GetGenericParameters();
         public abstract void Update(List<double> parameters);
+        public abstract Term Clone();
 
+        protected string name;
 
-        private string name;
+        public abstract void SetValues(double[] values);
+
+        public abstract double[] GetValues();
     }
 }

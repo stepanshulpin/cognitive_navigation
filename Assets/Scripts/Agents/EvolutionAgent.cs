@@ -67,7 +67,8 @@ public class EvolutionAgent : MonoBehaviour
 
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
-        Term close = new ZShapeTerm("close", chromosome.FuzzyGenes[0].Values[0], chromosome.FuzzyGenes[0].Values[1]);
+        //Term close = new ZShapeTerm("close", chromosome.FuzzyGenes[0].Values[0], chromosome.FuzzyGenes[0].Values[1]);
+        Term close = chromosome.FuzzyGenes[0].Term;
         Term far = new SShapeTerm("far", chromosome.FuzzyGenes[1].Values[0], chromosome.FuzzyGenes[1].Values[1]);
 
         LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);

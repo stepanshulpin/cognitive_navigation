@@ -11,6 +11,12 @@ namespace AI.FuzzyLogic.Terms
             this.standartDeviation = standartDeviation;
         }
 
+        public GaussianTerm(string name) : base(name)
+        {
+            mean = 0;
+            standartDeviation = 0;
+        }
+
         public override double Membership(double x)
         {
             return Math.Exp(-(x - mean) * (x - mean) / (2 * standartDeviation * standartDeviation));
@@ -43,6 +49,30 @@ namespace AI.FuzzyLogic.Terms
         public override TermType TermType()
         {
             return Terms.TermType.Gaussian;
+        }
+
+        public override int Size()
+        {
+            return 2;
+        }
+
+        public override Term Clone()
+        {
+            return new GaussianTerm(name, mean, standartDeviation);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            mean = values[0];
+            standartDeviation = values[1];
+        }
+
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = mean;
+            values[1] = standartDeviation;
+            return values;
         }
 
         private double mean;

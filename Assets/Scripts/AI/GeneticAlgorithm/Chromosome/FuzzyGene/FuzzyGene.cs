@@ -5,64 +5,38 @@ namespace AI.GeneticAlgorithm
 {
     public class FuzzyGene
     {
-        public TermType TermType
-        {
-            get
-            {
-                return termType;
-            }
-        }
-
-        public double[] Values { get => values; }
-        public int Size { get => size; }
+        public double[] Values { get => term.GetValues(); }
+        public int Size { get => term.Size(); }
         public double MinValue { get => minValue; }
         public double MaxValue { get => maxValue; }
+        public Term Term { get => term; set => term = value; }
+        public TermType TermType { get => term.TermType(); }
 
-        public FuzzyGene(TermType termType, double minValue, double maxValue, int size)
+        public FuzzyGene(TermType termType, string name, double minValue, double maxValue)
         {
             this.minValue = minValue;
             this.maxValue = maxValue;
-            this.size = size;
-            this.termType = termType;
-            values = new double[size];
-        }
-
-        public FuzzyGene(double minValue, double maxValue, int size)
-        {
-            this.minValue = minValue;
-            this.maxValue = maxValue;
-            this.size = size;
-            values = new double[size];
-        }
-
-        public FuzzyGene(double[] values, double minValue, double maxValue, int size)
-        {
-            this.values = values;
-            this.minValue = minValue;
-            this.maxValue = maxValue;
-            this.size = size;
+            term = TermHelper.instantiate(termType, name);
         }
 
         public void UpdateValues(double[] values)
         {
-            if (size != values.Length)
+            if (term.Size() != values.Length)
             {
                 throw new Exception("Values size must be same with gene size");
             }
-            values.CopyTo(this.values, 0);
+            term.SetValues(values);
         }
 
         public FuzzyGene Clone()
         {
-            FuzzyGene res = new FuzzyGene(minValue, maxValue, size);
-            values.CopyTo(res.values, 0);
+            FuzzyGene res = new FuzzyGene(term.TermType(), term.Name, minValue, maxValue);
+            res.Term = term.Clone();
             return res;
         }
 
-        private double[] values;
         private double minValue;
         private double maxValue;
-        private int size;
-        private TermType termType;        
+        private Term term;
     }
 }

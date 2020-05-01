@@ -101,7 +101,7 @@ namespace Tests.AI.GeneticAlgorithmTest
             IChromosome parent1 = new NumericChromosome(genes1);
             IChromosome parent2 = new NumericChromosome(genes2);
             LinearRecombination recombination = new LinearRecombination(null);
-            IChromosome chromosome = recombination.calc(parent1, parent2, alpha);
+            IChromosome chromosome = recombination.calc((NumericChromosome) parent1, (NumericChromosome) parent2, alpha);
             Assert.AreEqual(2, chromosome.Genes[0]);
         }
 

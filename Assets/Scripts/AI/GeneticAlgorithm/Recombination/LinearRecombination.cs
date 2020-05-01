@@ -33,10 +33,21 @@ namespace AI.GeneticAlgorithm
             {
                 throw new Exception("Parents must have same size!");
             }
-            return calc(parent1, parent2, alpha);
+            if (parent1 is NumericChromosome && parent2 is NumericChromosome)
+            {
+                return calc((NumericChromosome) parent1, (NumericChromosome) parent2, alpha);
+            }
+            else
+            {
+                if (parent1 is FuzzyChromosome && parent2 is FuzzyChromosome)
+                {
+                    return calc((FuzzyChromosome)parent1, (FuzzyChromosome)parent2, alpha);
+                }
+            }
+            throw new Exception("Parents must be same type of chromosome");
         }
 
-        public IChromosome calc(IChromosome parent1, IChromosome parent2, double alpha)
+        public IChromosome calc(NumericChromosome parent1, NumericChromosome parent2, double alpha)
         {
             int size = parent1.Size;
             IChromosome child = parent1.Clone();
@@ -48,6 +59,24 @@ namespace AI.GeneticAlgorithm
                 genes[gen] += alpha * (parent2Genes[gen] - parent1Genes[gen]);
             }
             child.UpdateGenes(genes);
+            return child;
+        }
+
+        public IChromosome calc(FuzzyChromosome parent1, FuzzyChromosome parent2, double alpha)
+        {
+            FuzzyChromosome child = (FuzzyChromosome) parent1.Clone();
+            for (int gen = 0; gen < child.FuzzyGenes.Count; gen++)
+            {
+                if (parent1.FuzzyGenes[gen].TermType.Equals(parent2.FuzzyGenes[gen].TermType))
+                {
+                    double[] values = child.FuzzyGenes[gen].Values;
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] += alpha * (parent2.FuzzyGenes[gen].Values[i] - parent1.FuzzyGenes[gen].Values[i]);
+                    }
+                    child.FuzzyGenes[gen].UpdateValues(values);
+                }
+            }
             return child;
         }
 

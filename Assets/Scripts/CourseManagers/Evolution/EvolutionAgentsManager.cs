@@ -70,16 +70,16 @@ public class EvolutionAgentsManager : MonoBehaviour
         int middle = agentsCount / 2 - 1;        
         geneticAlgorithm = new GeneticAlgorithm(setParams());
         List<FuzzyGene> genes = new List<FuzzyGene>();
-        genes.Add(new FuzzyGene(TermType.ZShape, 0, 15, 2));
-        genes.Add(new FuzzyGene(TermType.SShape, 0, 15, 2));
+        //genes.Add(new FuzzyGene(TermType.ZShape, 0, 15, 2));
+        //genes.Add(new FuzzyGene(TermType.SShape, 0, 15, 2));
 
-        genes.Add(new FuzzyGene(TermType.ZShape, 0, 10, 2));
-        genes.Add(new FuzzyGene(TermType.Trapezodial, 0, 10, 4));
-        genes.Add(new FuzzyGene(TermType.SShape, 0, 10, 2));
+        //genes.Add(new FuzzyGene(TermType.ZShape, 0, 10, 2));
+        //genes.Add(new FuzzyGene(TermType.Trapezodial, 0, 10, 4));
+        //genes.Add(new FuzzyGene(TermType.SShape, 0, 10, 2));
 
-        genes.Add(new FuzzyGene(TermType.ZShape, -45, 45, 2));
-        genes.Add(new FuzzyGene(TermType.Trapezodial, -45, 45, 4));
-        genes.Add(new FuzzyGene(TermType.SShape, -45, 45, 2));
+        //genes.Add(new FuzzyGene(TermType.ZShape, -45, 45, 2));
+        //genes.Add(new FuzzyGene(TermType.Trapezodial, -45, 45, 4));
+        //genes.Add(new FuzzyGene(TermType.SShape, -45, 45, 2));
 
         geneticAlgorithm.initializeFuzzyChromosomes(genes);
         for (int agentNum = 0; agentNum < agentsCount; agentNum++)

@@ -9,6 +9,13 @@ namespace AI.FuzzyLogic.Terms {
             this.slope = slope;
         }
 
+        public BellTerm(string name) : base(name)
+        {
+            center = 0;
+            width = 0;
+            slope = 0;
+        }
+
         public override double Membership(double x) {
             return 1.0 / (1 + Math.Pow(Math.Abs((x - center) / width), 2 * slope));
         }
@@ -42,6 +49,32 @@ namespace AI.FuzzyLogic.Terms {
         {
             return Terms.TermType.Bell;
         }
+
+        public override int Size()
+        {
+            return 3;
+        }
+
+        public override Term Clone()
+        {
+            return new BellTerm(name, center, width, slope);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            center = values[0];
+            width = values[1];
+            slope = values[2];
+        }
+
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = center;
+            values[1] = width;
+            values[2] = slope;
+            return values;
+         }
 
         private double center;
 

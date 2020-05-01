@@ -11,6 +11,12 @@ namespace AI.FuzzyLogic.Terms
             this.slope = slope;
         }
 
+        public SigmoidalTerm(string name) : base(name)
+        {
+            slope = 0;
+            inflection = 0;
+        }
+
         public override double Membership(double x)
         {
             return 1.0 / (1.0 + Math.Exp(-slope * (x - inflection)));
@@ -43,6 +49,30 @@ namespace AI.FuzzyLogic.Terms
         public override TermType TermType()
         {
             return Terms.TermType.Sigmoidal;
+        }
+
+        public override int Size()
+        {
+            return 2;
+        }
+
+        public override Term Clone()
+        {
+            return new SigmoidalTerm(name, inflection, slope);
+        }
+
+        public override void SetValues(double[] values)
+        {
+            slope = values[0];
+            inflection = values[1];
+        }
+
+        public override double[] GetValues()
+        {
+            double[] values = new double[Size()];
+            values[0] = slope;
+            values[1] = inflection;
+            return values;
         }
 
         private double slope;
