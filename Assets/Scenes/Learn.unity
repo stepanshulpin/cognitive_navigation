@@ -305,7 +305,7 @@ MonoBehaviour:
   childrenSize: 80
   selectParentsTournamentSize: 80
   draftPart: 0.3
-  maxIterationCount: 750
+  maxIterationCount: 100
   targetFitness: 1500
 --- !u!1 &2133087343
 GameObject:

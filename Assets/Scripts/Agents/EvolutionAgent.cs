@@ -67,9 +67,8 @@ public class EvolutionAgent : MonoBehaviour
 
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
-        //Term close = new ZShapeTerm("close", chromosome.FuzzyGenes[0].Values[0], chromosome.FuzzyGenes[0].Values[1]);
         Term close = chromosome.FuzzyGenes[0].Term;
-        Term far = new SShapeTerm("far", chromosome.FuzzyGenes[1].Values[0], chromosome.FuzzyGenes[1].Values[1]);
+        Term far = chromosome.FuzzyGenes[1].Term;
 
         LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);
         lls.AddTerm(close);
@@ -97,9 +96,9 @@ public class EvolutionAgent : MonoBehaviour
         fuzzyEngine.RegisterInputVariable(rrs);
 
 
-        Term slow = new ZShapeTerm("slow", chromosome.FuzzyGenes[2].Values[0], chromosome.FuzzyGenes[2].Values[1]);
-        Term medium = new TrapezoidalTerm("medium", chromosome.FuzzyGenes[3].Values[0], chromosome.FuzzyGenes[3].Values[1], chromosome.FuzzyGenes[3].Values[2], chromosome.FuzzyGenes[3].Values[3]);
-        Term fast = new SShapeTerm("fast", chromosome.FuzzyGenes[4].Values[0], chromosome.FuzzyGenes[4].Values[1]);
+        Term slow = chromosome.FuzzyGenes[2].Term;
+        Term medium = chromosome.FuzzyGenes[3].Term;
+        Term fast = chromosome.FuzzyGenes[4].Term;
 
         LinguisticVariable speed = new LinguisticVariable("speed", 0.0, 10.0);
         speed.AddTerm(slow);
@@ -107,9 +106,9 @@ public class EvolutionAgent : MonoBehaviour
         speed.AddTerm(fast);
         fuzzyEngine.RegisterOutputVariable(speed);
 
-        Term left = new ZShapeTerm("left", chromosome.FuzzyGenes[5].Values[0], chromosome.FuzzyGenes[5].Values[1]);
-        Term forward = new TrapezoidalTerm("forward", chromosome.FuzzyGenes[6].Values[0], chromosome.FuzzyGenes[6].Values[1], chromosome.FuzzyGenes[6].Values[2], chromosome.FuzzyGenes[6].Values[3]);
-        Term right = new SShapeTerm("right", chromosome.FuzzyGenes[7].Values[0], chromosome.FuzzyGenes[7].Values[1]);
+        Term left = chromosome.FuzzyGenes[5].Term;
+        Term forward = chromosome.FuzzyGenes[6].Term;
+        Term right = chromosome.FuzzyGenes[7].Term;
 
         LinguisticVariable direction = new LinguisticVariable("direction", -45.0, 45.0);
         direction.AddTerm(left);

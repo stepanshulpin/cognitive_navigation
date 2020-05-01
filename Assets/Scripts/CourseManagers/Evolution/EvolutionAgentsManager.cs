@@ -15,7 +15,6 @@ public class EvolutionAgentsManager : MonoBehaviour
 
     [Header("Genetic Params")]
     public int agentsCount = 5;
-    public int termParamsCount = 20;
     public double mutationProbability = 0.2;
     public int childrenSize = 4;
     public int selectParentsTournamentSize = 4;
@@ -54,12 +53,44 @@ public class EvolutionAgentsManager : MonoBehaviour
     {
         GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
         parameters.GenerationSize = agentsCount;
-        parameters.ChromosomeSize = termParamsCount;
         parameters.MutationProbability = mutationProbability;
         parameters.ChildrenSize = childrenSize;
         parameters.SelectParentsTournamentSize = selectParentsTournamentSize;
         parameters.DraftPart = draftPart;
         return parameters;
+    }
+    public class FuzzyParams
+    {
+        public string close = "close";
+        public string far = "far";
+        public string slow = "slow";
+        public string medium = "medium";
+        public string fast = "fast";
+        public string left = "left";
+        public string forward = "forward";
+        public string right = "right";
+
+        public double sensorsMin = 0;
+        public double sensorsMax = 15;
+        public double speedMin = 0;
+        public double speedMax = 10;
+        public double rotationMin = -45;
+        public double rotationMax = 45;
+    }
+
+    private List<FuzzyGene.GeneParams> createGeneParams() 
+    {
+        List<FuzzyGene.GeneParams> geneParams = new List<FuzzyGene.GeneParams>();
+        FuzzyParams fuzzyParams = new FuzzyParams();
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.close, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.far, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.slow, fuzzyParams.speedMin, fuzzyParams.speedMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.medium, fuzzyParams.speedMin, fuzzyParams.speedMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.fast, fuzzyParams.speedMin, fuzzyParams.speedMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.left, fuzzyParams.rotationMin, fuzzyParams.rotationMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.forward, fuzzyParams.rotationMin, fuzzyParams.rotationMax));
+        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.right, fuzzyParams.rotationMin, fuzzyParams.rotationMax));
+        return geneParams;
     }
 
     private void Awake()
@@ -69,19 +100,7 @@ public class EvolutionAgentsManager : MonoBehaviour
         agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;        
         geneticAlgorithm = new GeneticAlgorithm(setParams());
-        List<FuzzyGene> genes = new List<FuzzyGene>();
-        //genes.Add(new FuzzyGene(TermType.ZShape, 0, 15, 2));
-        //genes.Add(new FuzzyGene(TermType.SShape, 0, 15, 2));
-
-        //genes.Add(new FuzzyGene(TermType.ZShape, 0, 10, 2));
-        //genes.Add(new FuzzyGene(TermType.Trapezodial, 0, 10, 4));
-        //genes.Add(new FuzzyGene(TermType.SShape, 0, 10, 2));
-
-        //genes.Add(new FuzzyGene(TermType.ZShape, -45, 45, 2));
-        //genes.Add(new FuzzyGene(TermType.Trapezodial, -45, 45, 4));
-        //genes.Add(new FuzzyGene(TermType.SShape, -45, 45, 2));
-
-        geneticAlgorithm.initializeFuzzyChromosomes(genes);
+        geneticAlgorithm.initializeFuzzyChromosomes(createGeneParams());
         for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
             GameObject agentObject = Instantiate(agentPrefab);
@@ -181,7 +200,8 @@ public class EvolutionAgentsManager : MonoBehaviour
             floorManager.restart();
             agents = new List<EvolutionAgent>();
             agentsObjects = new List<GameObject>();
-            geneticAlgorithm.newGenerationFuzzy();
+            double mutationAttenuation = ((double)(maxIterationCount - iteration)) / maxIterationCount;
+            geneticAlgorithm.newGenerationFuzzy(mutationAttenuation);
             int middle = agentsCount / 2 - 1;
             for (int agentNum = 0; agentNum < agentsCount; agentNum++)
             {

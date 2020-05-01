@@ -35,6 +35,21 @@ namespace AI.GeneticAlgorithm
             return res;
         }
 
+        public class GeneParams
+        {
+
+            public string name;
+            public double min;
+            public double max;
+
+            public GeneParams(string name, double min, double max)
+            {
+                this.name = name;
+                this.min = min;
+                this.max = max;
+            }
+        }
+
         private double minValue;
         private double maxValue;
         private Term term;

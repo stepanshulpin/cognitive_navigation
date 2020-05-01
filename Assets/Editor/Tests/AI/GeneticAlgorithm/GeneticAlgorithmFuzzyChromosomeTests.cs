@@ -17,16 +17,13 @@ namespace Tests.AI.GeneticAlgorithmTest
         public void TestGeneticAlgorithmFunctionMax()
         {
             GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
-            parameters.GenerationSize = 10;
-            parameters.ChromosomeSize = 3;
+            parameters.GenerationSize = 20;
             parameters.MutationProbability = 0.2;
             parameters.DraftPart = 0.2;
-            parameters.ChildrenSize = 8;
-            parameters.SelectParentsTournamentSize = 5;
+            parameters.ChildrenSize = 20;
+            parameters.SelectParentsTournamentSize = 10;
             GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(parameters);
-            List<FuzzyGene> genes = new List<FuzzyGene>();
-            genes.Add(new FuzzyGene(TermType.Triangular, "test", 0, 5));
-            geneticAlgorithm.initializeFuzzyChromosomes(genes);
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParams());
 
             int iterCount = 100;
             for (int iter = 0; iter < iterCount; iter++)
@@ -44,14 +41,49 @@ namespace Tests.AI.GeneticAlgorithmTest
                 {
                     break;
                 }
-                geneticAlgorithm.newGenerationFuzzy();
+                geneticAlgorithm.newGenerationFuzzy(iter);
             }
             ISelection selection = new EliteSelection();
             IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
             double res = function2(best);
             Debug.Log("Fitness = " + res);
-            Debug.Log("Values = " + best.Genes[0] + " | " + best.Genes[1] + " | " + best.Genes[2]);
+            Debug.Log(printGenes((FuzzyChromosome)best));
             Assert.IsTrue(Math.Abs(51 - res) < 0.1);
+        }
+
+        [Test]
+        public void CanInit()
+        {
+            GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
+            parameters.GenerationSize = 20;
+            parameters.MutationProbability = 0.2;
+            parameters.DraftPart = 0.2;
+            parameters.ChildrenSize = 8;
+            parameters.SelectParentsTournamentSize = 5;
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(parameters);
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParams());
+        }
+
+        private List<FuzzyGene.GeneParams> createGeneParams()
+        {
+            List<FuzzyGene.GeneParams> geneParams = new List<FuzzyGene.GeneParams>();
+            geneParams.Add(new FuzzyGene.GeneParams("test", 0, 5));
+            return geneParams;
+        }
+
+        [Test]
+        public void CanIterate()
+        {
+            GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
+            parameters.GenerationSize = 20;
+            parameters.MutationProbability = 0.2;
+            parameters.DraftPart = 0.2;
+            parameters.ChildrenSize = 8;
+            parameters.SelectParentsTournamentSize = 5;
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(parameters);
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParams());
+
+            geneticAlgorithm.newGenerationFuzzy(0.9);
         }
 
         [Test]
@@ -84,6 +116,16 @@ namespace Tests.AI.GeneticAlgorithmTest
             Debug.Log(printGenes(chromosome1));
             Debug.Log(printGenes(chromosome2));
             Assert.AreEqual(4.5, newChromosome.Genes[3]);
+        }
+
+        [Test]
+        public void TestMaxIteration()
+        {
+            int maxIter = 100;
+            int iter = 17;
+            double coef = ((double) (maxIter - iter)) / maxIter;
+            Debug.Log(coef);
+            Assert.IsTrue(Math.Abs(coef - 0.83) < 0.001);
         }
 
         [Test]
@@ -161,6 +203,10 @@ namespace Tests.AI.GeneticAlgorithmTest
 
         private double function2(IChromosome chromosome)
         {
+            if (chromosome.Genes.Length != 3)
+            {
+                return -1000;
+            }
             double x = chromosome.Genes[0];
             double y = chromosome.Genes[1];
             double z = chromosome.Genes[2];

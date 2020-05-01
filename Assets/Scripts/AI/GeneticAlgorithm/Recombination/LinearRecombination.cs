@@ -28,11 +28,7 @@ namespace AI.GeneticAlgorithm
 
         private IChromosome Recombine(IChromosome parent1, IChromosome parent2)
         {
-            double alpha = random.Randomize(-d, 1 + d);
-            if (parent1.Size != parent2.Size)
-            {
-                throw new Exception("Parents must have same size!");
-            }
+            double alpha = random.Randomize(-d, 1 + d);            
             if (parent1 is NumericChromosome && parent2 is NumericChromosome)
             {
                 return calc((NumericChromosome) parent1, (NumericChromosome) parent2, alpha);
@@ -49,6 +45,10 @@ namespace AI.GeneticAlgorithm
 
         public IChromosome calc(NumericChromosome parent1, NumericChromosome parent2, double alpha)
         {
+            if (parent1.Size != parent2.Size)
+            {
+                throw new Exception("Parents must have same size!");
+            }
             int size = parent1.Size;
             IChromosome child = parent1.Clone();
             double[] genes = child.Genes;
@@ -64,6 +64,10 @@ namespace AI.GeneticAlgorithm
 
         public IChromosome calc(FuzzyChromosome parent1, FuzzyChromosome parent2, double alpha)
         {
+            if (parent1.FuzzyGenes.Count != parent2.FuzzyGenes.Count)
+            {
+                throw new Exception("Parents must have same size!");
+            }
             FuzzyChromosome child = (FuzzyChromosome) parent1.Clone();
             for (int gen = 0; gen < child.FuzzyGenes.Count; gen++)
             {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AI.FuzzyLogic.Terms;
+using System;
+using System.Collections.Generic;
 
 namespace AI.GeneticAlgorithm
 {
@@ -29,16 +31,28 @@ namespace AI.GeneticAlgorithm
             }
             Generation generation = new Generation(population.Size, individuals);
             population.RegisterNewGeneration(generation);
+        }        
+
+        private FuzzyGene createRandomFuzzyGene(string name, double min, double max)
+        {
+            int termType = random.Randomize(0, TermHelper.TERM_TYPES_COUNT);
+            TermType type = TermHelper.getTermType(termType);
+            return new FuzzyGene(type, name, min, max);
         }
 
-        public void initializeFuzzyChromosomes(List<FuzzyGene> fuzzyGenes)
+        public void initializeFuzzyChromosomes(List<FuzzyGene.GeneParams> geneParams)
         {
             population = new Population();
             List<IChromosome> individuals = new List<IChromosome>();
             for (int ind = 0; ind < parameters.GenerationSize; ind++)
             {
                 FuzzyChromosome chromosome = new FuzzyChromosome();
-                foreach(FuzzyGene gene in fuzzyGenes)
+                List<FuzzyGene> fuzzyGenes = new List<FuzzyGene>();
+                foreach(FuzzyGene.GeneParams geneParam in geneParams)
+                {
+                    fuzzyGenes.Add(createRandomFuzzyGene(geneParam.name, geneParam.min, geneParam.max));
+                }
+                foreach (FuzzyGene gene in fuzzyGenes)
                 {
                     FuzzyGene createdGen = gene.Clone();
                     double[] values = new double[gene.Size];
@@ -84,7 +98,7 @@ namespace AI.GeneticAlgorithm
             population.RegisterNewGeneration(newGeneration);
         }
 
-        public void newGenerationFuzzy()
+        public void newGenerationFuzzy(double mutationAttenuation)
         {
             List<IChromosome> children = new List<IChromosome>();
             for (int i = 0; i < parameters.ChildrenSize; i++)
@@ -93,7 +107,7 @@ namespace AI.GeneticAlgorithm
                 children.Add(linearRecombination(parents));
             }
             List<IChromosome> previous = GetCurrentGeneration().Individuals;
-            termBoundsMutationFuzzy(previous, children);
+            termMutationFuzzy(previous, children, mutationAttenuation);
             Generation newGeneration = eliteDraft(children);
             population.RegisterNewGeneration(newGeneration);
         }
@@ -123,16 +137,20 @@ namespace AI.GeneticAlgorithm
             }
         }
 
-        public void termBoundsMutationFuzzy(List<IChromosome> previous, List<IChromosome> children)
+        public void termMutationFuzzy(List<IChromosome> previous, List<IChromosome> children, double mutationAttenuation)
         {
-            IMutation mutation = new TermBoundsMutation(random);
+            IMutation boundsMutation = new TermBoundsMutation(random);
+            IMutation shapeMutation = new TermShapeMutation(random);
+            double shapeProbability = parameters.MutationProbability * mutationAttenuation;
             foreach (IChromosome chromosome in previous)
             {
-                mutation.Mutate(chromosome, parameters.MutationProbability);
+                boundsMutation.Mutate(chromosome, parameters.MutationProbability);
+                shapeMutation.Mutate(chromosome, shapeProbability);
             }
             foreach (IChromosome chromosome in children)
             {
-                mutation.Mutate(chromosome, parameters.MutationProbability);
+                boundsMutation.Mutate(chromosome, parameters.MutationProbability);
+                shapeMutation.Mutate(chromosome, shapeProbability);
             }
         }
 
