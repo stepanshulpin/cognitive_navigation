@@ -16,21 +16,26 @@ namespace AI.FuzzyLogic.Terms {
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            parameters.Add(center);
-            parameters.Add(width);
-            parameters.Add(slope);
+            double lw = -width + center;
+            double ls = -width * Math.Pow(0.1, 1 / (2 * slope)) + center;
+            double rs = 2 * center - ls;
+            double rw = 2 * center - lw;
+            parameters.Add(lw);
+            parameters.Add(ls);
+            parameters.Add(rs);
+            parameters.Add(rw);
             return parameters;
         }
 
         public override void Update(List<double> parameters)
         {
-            if (parameters.Count != 3)
-            {
-                throw new ArgumentException("Invalid parameters size");
-            }
-            center = parameters[0];
-            width = parameters[1];
-            slope = parameters[2];
+            double lw = parameters[0];
+            double ls = parameters[1];
+            double rs = parameters[2];
+            double rw = parameters[3];
+            center = 0.5 * (rs + ls);
+            width = center - lw;
+            slope = 2 * width / (ls - lw);
         }
 
         public override TermType TermType()
@@ -40,8 +45,8 @@ namespace AI.FuzzyLogic.Terms {
 
         private double center;
 
-        private double width;
+        private double width;//a
 
-        private double slope;
+        private double slope;//b
     }
 }

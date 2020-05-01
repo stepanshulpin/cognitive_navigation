@@ -20,22 +20,29 @@ namespace AI.FuzzyLogic.Terms {
             }
             return 0.0;
         }
+
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            parameters.Add(start);
-            parameters.Add(end);
+            double lw = start;
+            double ls = end;
+            double rs = end;
+            double rw = 2 * end - start;
+            parameters.Add(lw);
+            parameters.Add(ls);
+            parameters.Add(rs);
+            parameters.Add(rw);
             return parameters;
         }
 
         public override void Update(List<double> parameters)
         {
-            if (parameters.Count != 2)
-            {
-                throw new ArgumentException("Invalid parameters size");
-            }
-            start = parameters[0];
-            end = parameters[1];
+            double lw = parameters[0];
+            double ls = parameters[1];
+            double rs = parameters[2];
+            double rw = parameters[3];
+            start = rs;
+            end = 2 * rw - rs;
         }
 
         public override TermType TermType()
