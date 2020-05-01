@@ -170,7 +170,7 @@ public class EvolutionAgentsManager : MonoBehaviour
     {
         ISelection selection = new EliteSelection();
         IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
-        Debug.Log("Best agent fitness " + best.Fitness + " genes = " + printGenes(best));
+        Debug.Log("Best agent fitness " + best.Fitness + " genes = " + printGenes((FuzzyChromosome)best));
         if (best.Fitness > targetFitness)
         {
             return true;
@@ -233,20 +233,25 @@ public class EvolutionAgentsManager : MonoBehaviour
         using (StreamWriter file = File.CreateText(@"D:\Учеба\Диплом\Diplom\Diplom\best_agent.txt"))
         {
             file.WriteLine("Fitness = " + best.Fitness);
-            file.WriteLine("Genes = " + printGenes(best));
+            file.WriteLine("Genes = " + printGenes((FuzzyChromosome)best));
         }
         isComplete = true;
     }
 
-    private String printGenes(IChromosome chromosome)
+    private String printGenes(FuzzyChromosome chromosome)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.Append("[");
-        for (int i = 0; i < chromosome.Size; i++)
+        foreach (FuzzyGene gene in chromosome.FuzzyGenes)
         {
-            stringBuilder.Append(chromosome.Genes[i].ToString("0.##")).Append(";  ");
+            stringBuilder.Append(gene.TermType).Append(": ");
+            stringBuilder.Append("[");
+            for (int i = 0; i < gene.Size; i++)
+            {
+                stringBuilder.Append(gene.Values[i].ToString("0.##")).Append(";  ");
+            }
+            stringBuilder.Append("] ");
         }
-        stringBuilder.Append("]");
+
         return stringBuilder.ToString();
     }
 
