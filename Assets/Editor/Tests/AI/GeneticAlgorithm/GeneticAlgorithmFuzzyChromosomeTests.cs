@@ -41,7 +41,8 @@ namespace Tests.AI.GeneticAlgorithmTest
                 {
                     break;
                 }
-                geneticAlgorithm.newGenerationFuzzy(iter);
+                double coef = ((double)(iterCount - iter)) / iterCount;
+                geneticAlgorithm.newGenerationFuzzy(coef);
             }
             ISelection selection = new EliteSelection();
             IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
