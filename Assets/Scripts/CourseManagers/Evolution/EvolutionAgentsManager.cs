@@ -232,7 +232,7 @@ public class EvolutionAgentsManager : MonoBehaviour
         IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
         using (StreamWriter file = File.CreateText(@"D:\Учеба\Диплом\Diplom\Diplom\best_agent.txt"))
         {
-            file.WriteLine("Fitness = " + best.Fitness);
+            file.WriteLine("Fitness = " + best.Fitness.ToString("0.##"));
             file.WriteLine("Genes = " + printGenes((FuzzyChromosome)best));
         }
         isComplete = true;

@@ -140,9 +140,24 @@ public class EvolutionFloorManager : MonoBehaviour {
     private void InitializeObstacles(GameObject segment) {
         List<GameObject> obstacles = segmentStaticObstacles[segment.GetInstanceID()];
         int activeObstaclesCount = random.Next(minStaticObstaclesPerSegment, maxStaticObstaclesPerSegment);
+        bool top = false;
+        bool bottom = false;
         foreach (GameObject obstacle in obstacles) {
             if (activeObstaclesCount > 0) {
-                this.RandomizeObstacle(obstacle);
+                if (!top) { 
+                    RandomizeObstacleTop(obstacle);
+                    top = true;
+                } else
+                {
+                    if (!bottom)
+                    {
+                        RandomizeObstacleBottom(obstacle);
+                        bottom = true;
+                    } else
+                    {
+                        RandomizeObstacle(obstacle);
+                    }
+                }
                 obstacle.SetActive(true);
                 activeObstaclesCount--;
             } else {
@@ -164,6 +179,42 @@ public class EvolutionFloorManager : MonoBehaviour {
                 obstacle.SetActive(false);
             }
         }
+    }
+
+    private void RandomizeObstacleBottom(GameObject obstacle)
+    {
+        Vector3 obstaclePosition = new Vector3(
+            (float)random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
+            0.5f,
+            topLeft.y
+        );
+        obstacle.transform.localPosition = obstaclePosition;
+        Vector3 obstacleScale = new Vector3(
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale,
+            1.0f,
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale
+        );
+        obstacle.transform.localScale = obstacleScale;
+        float randomRotationAngle = (float)random.NextDouble() * maxObstacleRotationAngle;
+        obstacle.transform.localRotation = Quaternion.AngleAxis(randomRotationAngle, Vector3.up);
+    }
+
+    private void RandomizeObstacleTop(GameObject obstacle)
+    {
+        Vector3 obstaclePosition = new Vector3(
+            (float)random.NextDouble() * (bottomRight.x - topLeft.x) + topLeft.x,
+            0.5f,
+            bottomRight.y
+        );
+        obstacle.transform.localPosition = obstaclePosition;
+        Vector3 obstacleScale = new Vector3(
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale,
+            1.0f,
+            (float)random.NextDouble() * (maxObstacleScale - minObstacleScale) + minObstacleScale
+        );
+        obstacle.transform.localScale = obstacleScale;
+        float randomRotationAngle = (float)random.NextDouble() * maxObstacleRotationAngle;
+        obstacle.transform.localRotation = Quaternion.AngleAxis(randomRotationAngle, Vector3.up);
     }
 
     private void RandomizeObstacle(GameObject obstacle) {
