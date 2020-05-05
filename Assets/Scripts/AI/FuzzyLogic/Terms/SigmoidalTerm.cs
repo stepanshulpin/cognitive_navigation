@@ -25,10 +25,20 @@ namespace AI.FuzzyLogic.Terms
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            double lw = inflection;
-            double ls = 1 / slope * Math.Log(0.1) + inflection;
-            double rs = 2 * ls - lw;
-            double rw = 2 * rs - lw;
+            double lw, ls, rs, rw;
+            if (slope > 0)
+            {
+                lw = inflection;
+                ls = -1 / slope * Math.Log(0.1/0.9) + inflection;
+                rs = 2 * ls - lw;
+                rw = 2 * rs - lw;
+            } else
+            {
+                rw = inflection;
+                rs = -1 / slope * Math.Log(0.1 / 0.9) + inflection;
+                ls = rs;
+                lw = 2 * ls - rw;
+            }            
             parameters.Add(lw);
             parameters.Add(ls);
             parameters.Add(rs);
@@ -43,7 +53,7 @@ namespace AI.FuzzyLogic.Terms
             double rs = parameters[2];
             double rw = parameters[3];
             inflection = lw;
-            slope = -Math.Log(0.1) / (ls - inflection);
+            slope = -Math.Log(0.1/0.9) / (ls - inflection);
         }
 
         public override TermType TermType()

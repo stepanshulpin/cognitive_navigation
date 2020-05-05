@@ -23,8 +23,8 @@ namespace AI.FuzzyLogic.Terms {
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            double lw = -width + center;
-            double ls = -width * Math.Pow(0.1, 1 / (2 * slope)) + center;
+            double lw = -width * Math.Pow(1, 1 / (2 * slope)) + center;
+            double ls = -width * Math.Pow(0.1 / 0.9, 1 / (2 * slope)) + center;
             double rs = 2 * center - ls;
             double rw = 2 * center - lw;
             parameters.Add(lw);
@@ -62,17 +62,17 @@ namespace AI.FuzzyLogic.Terms {
 
         public override void SetValues(double[] values)
         {
-            center = values[0];
-            width = values[1];
-            slope = values[2];
+            width = values[0];
+            slope = values[1];
+            center = values[2];
         }
 
         public override double[] GetValues()
         {
-            double[] values = new double[Size()];
-            values[0] = center;
-            values[1] = width;
-            values[2] = slope;
+            double[] values = new double[Size()];            
+            values[0] = width;
+            values[1] = slope;
+            values[2] = center;
             return values;
          }
 

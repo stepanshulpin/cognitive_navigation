@@ -25,8 +25,8 @@ namespace AI.FuzzyLogic.Terms
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            double lw = -standartDeviation * Math.Sqrt(-2 * Math.Log(0.5)) + mean;
-            double ls = -standartDeviation * Math.Sqrt(-2 * Math.Log(0.9)) + mean;
+            double lw = -Math.Abs(standartDeviation) * Math.Sqrt(-2 * Math.Log(0.5)) + mean;
+            double ls = -Math.Abs(standartDeviation) * Math.Sqrt(-2 * Math.Log(0.9)) + mean;
             double rs = 2 * mean - ls;
             double rw = 2 * mean - lw;
             parameters.Add(lw);
@@ -63,15 +63,15 @@ namespace AI.FuzzyLogic.Terms
 
         public override void SetValues(double[] values)
         {
-            mean = values[0];
-            standartDeviation = values[1];
+            standartDeviation = values[0];
+            mean = values[1];
         }
 
         public override double[] GetValues()
         {
             double[] values = new double[Size()];
-            values[0] = mean;
-            values[1] = standartDeviation;
+            values[0] = standartDeviation;
+            values[1] = mean;
             return values;
         }
 

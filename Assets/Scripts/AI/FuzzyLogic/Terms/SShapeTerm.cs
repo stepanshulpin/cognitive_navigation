@@ -30,10 +30,19 @@ namespace AI.FuzzyLogic.Terms {
         public override List<double> GetGenericParameters()
         {
             List<double> parameters = new List<double>();
-            double lw = start;
+            double lw;
             double ls = 0.9 * (end - start) + start;
             double rs = end;
-            double rw = 2 * end - start;
+            double rw;
+            if (start < end)
+            {
+                lw = start;
+                rw = 2 * end - start;
+            } else
+            {
+                lw = 2 * end - start;
+                rw = start;
+            }
             parameters.Add(lw);
             parameters.Add(ls);
             parameters.Add(rs);
