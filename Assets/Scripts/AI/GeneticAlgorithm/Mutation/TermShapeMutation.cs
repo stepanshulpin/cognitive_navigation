@@ -45,7 +45,10 @@ namespace AI.GeneticAlgorithm
                 Term prevTerm = fuzzyGene.Term;
                 Term term = TermHelper.instantiate(type, prevTerm.Name);
                 term.Update(prevTerm.GetGenericParameters());
-                fuzzyGene.Term = term;
+                if (TermHelper.isKeepTolerance(prevTerm, term, fuzzyGene.MinValue, fuzzyGene.MaxValue))
+                {
+                    fuzzyGene.Term = term;
+                }
             }
         }
 

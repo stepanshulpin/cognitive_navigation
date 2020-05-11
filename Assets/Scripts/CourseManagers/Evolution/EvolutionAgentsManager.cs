@@ -170,8 +170,10 @@ public class EvolutionAgentsManager : MonoBehaviour
     {
         ISelection selection = new EliteSelection();
         IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
-        Debug.Log("Best agent fitness " + best.Fitness + " genes = " + printGenes((FuzzyChromosome)best));
-        if (best.Fitness > targetFitness)
+        Debug.Log("Best agent fitness " + best.Fitness.ToString("0.##") + " genes = " + printGenes((FuzzyChromosome)best));
+        double averageFitness = geneticAlgorithm.GetCurrentGeneration().CalculateFitness() / geneticAlgorithm.GetCurrentGeneration().Individuals.Count;
+        Debug.Log("Average fitness " + averageFitness.ToString("0.##"));
+        if (averageFitness > targetFitness)
         {
             return true;
         }

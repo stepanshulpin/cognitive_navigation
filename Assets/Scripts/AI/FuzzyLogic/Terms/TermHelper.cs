@@ -38,5 +38,37 @@ namespace AI.FuzzyLogic.Terms
             }
             throw new Exception("Instantiate doesn't implement for this type");
         }
+
+        public static bool isKeepTolerance(Term prevTerm, Term term, double minValue, double maxValue)
+        {
+            int points = 100;
+            double start = minValue;
+            double meanPre = 0;
+            double meanNew = 0;
+            double step = (maxValue - minValue) / points;
+            double[] valuesPre = new double[points+1];
+            double[] valuesNew = new double[points + 1];
+            for (int i = 0; i <= points; i++)
+            {
+                valuesPre[i] = prevTerm.Membership(start + step * i);
+                meanPre += valuesPre[i];
+                valuesNew[i] = term.Membership(start + step * i);
+                meanNew += valuesNew[i];
+            }
+            meanPre /= (points + 1);
+            meanNew /= (points + 1);
+            double sigmaPre = 0;
+            double sigmaNew = 0;
+            for (int i = 0; i <= points; i++)
+            {
+                sigmaPre += (valuesPre[i] - meanPre) * (valuesPre[i] - meanPre);
+                sigmaNew += (valuesNew[i] - meanNew) * (valuesNew[i] - meanNew);
+            }
+            sigmaPre /= (points + 1);
+            sigmaNew /= (points + 1);
+            sigmaPre = Math.Sqrt(sigmaPre);
+            sigmaNew = Math.Sqrt(sigmaNew);
+            return Math.Abs(sigmaNew - sigmaPre) < step;
+        }
     }
 }

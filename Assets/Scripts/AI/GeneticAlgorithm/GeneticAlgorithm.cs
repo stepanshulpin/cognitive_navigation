@@ -93,7 +93,7 @@ namespace AI.GeneticAlgorithm
                 List<IChromosome> parents = tournamentSelection();
                 children.Add(linearRecombination(parents));
             }
-            List<IChromosome> previous = GetCurrentGeneration().Individuals;
+            List<IChromosome> previous = new SelectionForMutation().Select(parameters.GenerationSize - (int)Math.Floor(parameters.GenerationSize * parameters.DraftPart), GetCurrentGeneration());
             termBoundsMutation(previous, children);
             Generation newGeneration = eliteDraft(children);
             population.RegisterNewGeneration(newGeneration);
@@ -107,7 +107,7 @@ namespace AI.GeneticAlgorithm
                 List<IChromosome> parents = tournamentSelection();
                 children.Add(linearRecombination(parents));
             }
-            List<IChromosome> previous = GetCurrentGeneration().Individuals;
+            List<IChromosome> previous = new SelectionForMutation().Select(parameters.GenerationSize - (int)Math.Floor(parameters.GenerationSize * parameters.DraftPart), GetCurrentGeneration());
             termMutationFuzzy(previous, children, mutationAttenuation);
             Generation newGeneration = eliteDraft(children);
             population.RegisterNewGeneration(newGeneration);

@@ -243,5 +243,160 @@ namespace Tests.AI.GeneticAlgorithmTest
             
             return stringBuilder.ToString();
         }
+
+
+        [Test]
+        public void testFuzzyGenetic()
+        {
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(setParamsTestFuzzy());
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParamsTestFuzzy());
+            int iterCount = 100;
+            for (int iter = 0; iter < iterCount; iter++)
+            {
+                if (iter % 10 == 0)
+                {
+                    Debug.Log("Iter = " + iter);
+                }
+                calculateFitnessTestFuzzy(geneticAlgorithm.GetCurrentGeneration());
+                if (stopTestFuzzy(geneticAlgorithm.GetCurrentGeneration()))
+                {
+                    break;
+                }
+                if (iter == iterCount - 1)
+                {
+                    break;
+                }
+                double coef = ((double)(iterCount - iter)) / iterCount;
+                geneticAlgorithm.newGenerationFuzzy(coef);
+            }
+            ISelection selection = new EliteSelection();
+            IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
+            double res = fitnessTestFuzzy(best);
+            Debug.Log("Fitness = " + res);
+            Debug.Log(printGenes((FuzzyChromosome)best));
+            Assert.IsTrue(res > 7 * 15);
+
+        }
+
+        [Test]
+        public void testFuzzyGeneticByStep()
+        {
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(setParamsTestFuzzyByStep());
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParamsTestFuzzy());
+            for (int j = 0; j < 10; j++)
+            {
+                calculateFitnessTestFuzzy(geneticAlgorithm.GetCurrentGeneration());
+                for (int i = 0; i < geneticAlgorithm.GetCurrentGeneration().Individuals.Count; i++)
+                {
+                    Debug.Log(i + " agent " + printGenes((FuzzyChromosome)geneticAlgorithm.GetCurrentGeneration().Individuals[i]) + " finess=" + geneticAlgorithm.GetCurrentGeneration().Individuals[i].Fitness);
+                }
+                Debug.Log("");
+                geneticAlgorithm.newGenerationFuzzy(1);
+            }
+        }
+
+        private GeneticAlgorithmParams setParamsTestFuzzyByStep()
+        {
+            GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
+            parameters.GenerationSize = 5;
+            parameters.MutationProbability = 0.2;
+            parameters.ChildrenSize = 5;
+            parameters.SelectParentsTournamentSize = 4;
+            parameters.DraftPart = 0.3;
+            return parameters;
+        }
+
+        private bool stopTestFuzzy(Generation generation)
+        {
+            foreach (IChromosome chromosome in generation.Individuals)
+            {
+                if (chromosome.Fitness > 7 * 15 - 0.1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [Test]
+        public void testSelectionWithMutation()
+        {
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(setParamsTestFuzzy());
+            geneticAlgorithm.initializeFuzzyChromosomes(createGeneParamsTestFuzzy());
+            calculateFitnessTestFuzzy(geneticAlgorithm.GetCurrentGeneration());
+            ISelection selection = new SelectionForMutation();
+            List<IChromosome> chromosomes = selection.Select(3, geneticAlgorithm.GetCurrentGeneration());
+            int size = chromosomes[0].Size;
+            double[] values = new double[size];
+            for (int i=0; i < size; i++)
+            {
+                values[i] = i;
+            }
+            chromosomes[0].UpdateGenes(values);
+            for (int i = 0; i < geneticAlgorithm.GetCurrentGeneration().Individuals.Count; i++)
+            {
+                Debug.Log(i + " agent " + printGenes((FuzzyChromosome)geneticAlgorithm.GetCurrentGeneration().Individuals[i]) + " finess=" + geneticAlgorithm.GetCurrentGeneration().Individuals[i].Fitness);
+            }
+        }
+        
+        private GeneticAlgorithmParams setParamsTestFuzzy()
+        {
+            GeneticAlgorithmParams parameters = new GeneticAlgorithmParams();
+            parameters.GenerationSize = 5;
+            parameters.MutationProbability = 0.5;
+            parameters.ChildrenSize = 5;
+            parameters.SelectParentsTournamentSize = 4;
+            parameters.DraftPart = 0.3;
+            return parameters;
+        }
+        public class FuzzyParams
+        {
+            public string close = "close";
+            public string far = "far";
+            public string slow = "slow";
+            public string medium = "medium";
+            public string fast = "fast";
+            public string left = "left";
+            public string forward = "forward";
+            public string right = "right";
+
+            public double sensorsMin = 0;
+            public double sensorsMax = 15;
+            public double speedMin = 0;
+            public double speedMax = 10;
+            public double rotationMin = -45;
+            public double rotationMax = 45;
+        }
+
+        private List<FuzzyGene.GeneParams> createGeneParamsTestFuzzy()
+        {
+            List<FuzzyGene.GeneParams> geneParams = new List<FuzzyGene.GeneParams>();
+            FuzzyParams fuzzyParams = new FuzzyParams();
+            geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.close, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
+            geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.far, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
+            return geneParams;
+        }
+
+
+
+        private void calculateFitnessTestFuzzy(Generation generation)
+        {
+            foreach (IChromosome chromosome in generation.Individuals)
+            {
+                double res = fitnessTestFuzzy(chromosome);
+                chromosome.Fitness = res;
+            }
+        }
+
+
+        private double fitnessTestFuzzy(IChromosome chromosome)
+        {
+            double fitness = 0;
+            for (int i = 0; i < chromosome.Genes.Length; i++)
+            {
+                fitness += chromosome.Genes[i];
+            }
+            return fitness;
+        }
     }
 }

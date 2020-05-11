@@ -303,9 +303,9 @@ MonoBehaviour:
   mutationProbability: 0.2
   childrenSize: 100
   selectParentsTournamentSize: 70
-  draftPart: 0.3
-  maxIterationCount: 100
-  targetFitness: 1500
+  draftPart: 0.2
+  maxIterationCount: 750
+  targetFitness: 1000
 --- !u!1 &2133087343
 GameObject:
   m_ObjectHideFlags: 0

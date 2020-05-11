@@ -382,6 +382,45 @@ namespace Tests.AI.GeneticAlgorithmTest
             Assert.IsTrue(Math.Abs(3 - zshape.GetValues()[1]) < eps);
         }
 
+        [Test]
+        public void testIsKeepTolerance()
+        {
+            Term gaussian = TermHelper.instantiate(TermType.Gaussian, "test");
+            gaussian.SetValues(new double[] { 2, 5 });
+            Term zshape = TermHelper.instantiate(TermType.ZShape, "test");
+            zshape.Update(gaussian.GetGenericParameters());
+            Assert.IsTrue(TermHelper.isKeepTolerance(gaussian, zshape, 0, 10));
+        }
+
+        [Test]
+        public void testIsKeepTolerance2()
+        {
+            Term bell = TermHelper.instantiate(TermType.Bell, "test");
+            bell.SetValues(new double[] { 2, 4, 6 });
+            Term triangular = TermHelper.instantiate(TermType.Triangular, "test");
+            triangular.Update(bell.GetGenericParameters());
+            Assert.IsFalse(TermHelper.isKeepTolerance(bell, triangular, 0, 10));
+        }
+
+        [Test]
+        public void testIsKeepTolerance3()
+        {
+            Term bell = TermHelper.instantiate(TermType.Bell, "test");
+            bell.SetValues(new double[] { 2, 4, 6 });
+            Term trapezodial = TermHelper.instantiate(TermType.Trapezodial, "test");
+            trapezodial.Update(bell.GetGenericParameters());
+            Assert.IsTrue(TermHelper.isKeepTolerance(bell, trapezodial, 0, 10));
+        }
+        [Test]
+        public void testIsKeepTolerance4()
+        {
+            Term trapezoidal = TermHelper.instantiate(TermType.Trapezodial, "test");
+            trapezoidal.SetValues(new double[] { 1, 5, 7, 8 });
+            Term triangular = TermHelper.instantiate(TermType.Triangular, "test");
+            triangular.Update(trapezoidal.GetGenericParameters());
+            Assert.IsTrue(TermHelper.isKeepTolerance(trapezoidal, triangular, 0, 10));
+        }
+
 
     }
 }
