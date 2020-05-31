@@ -182,18 +182,25 @@ public class EvolutionFloorManager : MonoBehaviour {
         GameObject obstacle1 = obstacles[1];
         GameObject obstacle2 = obstacles[2];
         GameObject obstacle3 = obstacles[3];
+        GameObject obstacle4 = obstacles[4];
+        GameObject obstacle5 = obstacles[5];
+        obstacle0.transform.localRotation = Quaternion.AngleAxis(-25, Vector3.up);
+        obstacle1.transform.localRotation = Quaternion.AngleAxis(25, Vector3.up);
         obstacle2.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
         obstacle3.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
-        obstacle0.transform.localScale = new Vector3(1, 1, 15);
+        obstacle4.transform.localRotation = Quaternion.AngleAxis(25, Vector3.up);
+        obstacle5.transform.localRotation = Quaternion.AngleAxis(-25, Vector3.up);
+        obstacle0.transform.localScale = new Vector3(1, 1, 5);
         obstacle1.transform.localScale = new Vector3(1, 1, 9);
         obstacle2.transform.localScale = new Vector3(1, 1, 18);
-        obstacle3.transform.localScale = new Vector3(1, 1, 10);
+        obstacle3.transform.localScale = new Vector3(1, 1, 15);
+        obstacle4.transform.localScale = new Vector3(1, 1, 5);
+        obstacle5.transform.localScale = new Vector3(1, 1, 3.5f);
         obstacle0.transform.localPosition = new Vector3(
             topLeft.x + (bottomRight.x - topLeft.x) / 4,
             0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 4
+            bottomRight.y - (bottomRight.y - topLeft.y) / 2
         );
-
         obstacle1.transform.localPosition = new Vector3(
             topLeft.x + (bottomRight.x - topLeft.x) / 4,
             0.5f,
@@ -205,15 +212,27 @@ public class EvolutionFloorManager : MonoBehaviour {
             topLeft.y + (bottomRight.y - topLeft.y) / 4
         );
         obstacle3.transform.localPosition = new Vector3(
-            (bottomRight.x + topLeft.x) / 2 + (bottomRight.x - topLeft.x) / 2.5f,
+            (bottomRight.x + topLeft.x) / 2 + (bottomRight.x - topLeft.x) / 3f,
             0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 4
+            bottomRight.y - (bottomRight.y - topLeft.y) / 5.2f
+        );
+        obstacle4.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 4,
+            0.5f,
+            topLeft.y + (bottomRight.y - topLeft.y) / 1.48f
+        );
+        obstacle5.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 3.75f,
+            0.5f,
+            topLeft.y + (bottomRight.y - topLeft.y) / 1f
         );
         obstacle0.SetActive(true);
         obstacle1.SetActive(true);
         obstacle2.SetActive(true);
         obstacle3.SetActive(true);
-        List<GameObject> another = obstacles.GetRange(4, obstacles.Count - 4);
+        obstacle4.SetActive(true);
+        obstacle5.SetActive(true);
+        List<GameObject> another = obstacles.GetRange(6, obstacles.Count - 6);
         foreach(GameObject obstacle in another)
         {
             obstacle.SetActive(false);
@@ -230,43 +249,44 @@ public class EvolutionFloorManager : MonoBehaviour {
         GameObject obstacle4 = obstacles[4];
         GameObject obstacle5 = obstacles[5];
         GameObject obstacle6 = obstacles[6];
-        obstacle1.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
-        obstacle2.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
-        obstacle3.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
-        obstacle4.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
-        obstacle5.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
-        obstacle6.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
-        obstacle0.transform.localScale = new Vector3(1, 1, 18);
-        obstacle1.transform.localScale = new Vector3(1, 1, 18);
-        obstacle2.transform.localScale = new Vector3(1, 1, 18);
-        obstacle3.transform.localScale = new Vector3(1, 1, 18);
-        obstacle4.transform.localScale = new Vector3(1, 1, 18);
-        obstacle5.transform.localScale = new Vector3(1, 1, 12);
-        obstacle6.transform.localScale = new Vector3(1, 1, 12);
+        obstacle0.transform.localRotation = Quaternion.AngleAxis(-20, Vector3.up);
+        obstacle1.transform.localRotation = Quaternion.AngleAxis(55, Vector3.up);
+        obstacle2.transform.localRotation = Quaternion.AngleAxis(55, Vector3.up);
+        obstacle3.transform.localRotation = Quaternion.AngleAxis(-55, Vector3.up);
+        obstacle4.transform.localRotation = Quaternion.AngleAxis(-55, Vector3.up);
+        obstacle5.transform.localRotation = Quaternion.AngleAxis(55, Vector3.up);
+        obstacle6.transform.localRotation = Quaternion.AngleAxis(55, Vector3.up);
+        obstacle0.transform.localScale = new Vector3(1, 1, 16);
+        obstacle1.transform.localScale = new Vector3(1, 1, 17);
+        obstacle2.transform.localScale = new Vector3(1, 1, 17);
+        obstacle3.transform.localScale = new Vector3(1, 1, 16);
+        obstacle4.transform.localScale = new Vector3(1, 1, 16);
+        obstacle5.transform.localScale = new Vector3(1, 1, 8);
+        obstacle6.transform.localScale = new Vector3(1, 1, 8);
         obstacle0.transform.localPosition = new Vector3(
-            topLeft.x,
+            topLeft.x -0.9f,
             0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 3
+            bottomRight.y - (bottomRight.y - topLeft.y) / 3.3f
         );
         obstacle1.transform.localPosition = new Vector3(
-            topLeft.x + (bottomRight.x - topLeft.x) / 4.5f,
-            0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 2.5f
-        );
-        obstacle2.transform.localPosition = new Vector3(
-            topLeft.x + (bottomRight.x - topLeft.x) / 5f,
-            0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 1.3f
-        );
-        obstacle3.transform.localPosition = new Vector3(
-            topLeft.x + (bottomRight.x - topLeft.x) / 1.7f,
+            topLeft.x + (bottomRight.x - topLeft.x) / 4f,
             0.5f,
             bottomRight.y - (bottomRight.y - topLeft.y) / 2.4f
         );
-        obstacle4.transform.localPosition = new Vector3(
-            topLeft.x + (bottomRight.x - topLeft.x) / 1.7f,
+        obstacle2.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 4.5f,
             0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 1.3f
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.25f
+        );
+        obstacle3.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.6f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 2.45f
+        );
+        obstacle4.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.6f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.25f
         );
         obstacle5.transform.localPosition = new Vector3(
             topLeft.x + (bottomRight.x - topLeft.x) / 1.1f,
@@ -276,7 +296,7 @@ public class EvolutionFloorManager : MonoBehaviour {
         obstacle6.transform.localPosition = new Vector3(
             topLeft.x + (bottomRight.x - topLeft.x) / 1.1f,
             0.5f,
-            bottomRight.y - (bottomRight.y - topLeft.y) / 1.8f
+            bottomRight.y - (bottomRight.y - topLeft.y) / 2f
         );
         obstacle0.SetActive(true);
         obstacle1.SetActive(true);

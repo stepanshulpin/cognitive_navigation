@@ -302,7 +302,7 @@ MonoBehaviour:
   agentsCount: 100
   mutationProbability: 0.3
   childrenSize: 100
-  selectParentsTournamentSize: 70
+  selectParentsTournamentSize: 30
   draftPart: 0.2
   maxIterationCount: 200
   targetFitness: 1000
