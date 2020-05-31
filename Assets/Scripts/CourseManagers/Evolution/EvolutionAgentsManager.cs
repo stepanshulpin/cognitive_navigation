@@ -95,12 +95,15 @@ public class EvolutionAgentsManager : MonoBehaviour
 
     private void Awake()
     {
+        logger = new Utils.Logger();
+        logger.setFileName(@"D:\Учеба\Диплом\Diplom\Diplom\evolution");
         iteration = 0;
         agents = new List<EvolutionAgent>();
         agentsObjects = new List<GameObject>();
         int middle = agentsCount / 2 - 1;        
         geneticAlgorithm = new GeneticAlgorithm(setParams());
         geneticAlgorithm.initializeFuzzyChromosomes(createGeneParams());
+        floorManager = GetComponent<EvolutionFloorManager>();
         for (int agentNum = 0; agentNum < agentsCount; agentNum++)
         {
             GameObject agentObject = Instantiate(agentPrefab);
@@ -108,11 +111,11 @@ public class EvolutionAgentsManager : MonoBehaviour
             agentObject.SetActive(false);
             EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
             agents.Add(agent);
+            agent.UpdateBounds(floorManager.topLeft.y, floorManager.bottomRight.y);
             agent.updateFuzzyParams(geneticAlgorithm.getFuzzyChromosome(agentNum));
             agentsObjects.Add(agentObject);
         }
         targetManager = GetComponent<EvolutionTargetManager>();
-        floorManager = GetComponent<EvolutionFloorManager>();
         followingCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowingCamera>();
     }
 
@@ -170,9 +173,10 @@ public class EvolutionAgentsManager : MonoBehaviour
     {
         ISelection selection = new EliteSelection();
         IChromosome best = selection.Select(1, geneticAlgorithm.GetCurrentGeneration())[0];
-        Debug.Log("Best agent fitness " + best.Fitness.ToString("0.##") + " genes = " + printGenes((FuzzyChromosome)best));
+        logger.printToConsole("Best agent fitness " + best.Fitness.ToString("0.##") + " genes = " + printGenes((FuzzyChromosome)best));
         double averageFitness = geneticAlgorithm.GetCurrentGeneration().CalculateFitness() / geneticAlgorithm.GetCurrentGeneration().Individuals.Count;
-        Debug.Log("Average fitness " + averageFitness.ToString("0.##"));
+        logger.printToConsole("Average fitness " + averageFitness.ToString("0.##"));
+        logger.printToFile(best.Fitness.ToString("0.##") + "\t" + averageFitness.ToString("0.##"));
         if (averageFitness > targetFitness)
         {
             return true;
@@ -192,7 +196,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             Destroy(agentsObjects[agentNum]);
         }
         iteration++;
-        Debug.Log("Iteration #" + iteration);
+        logger.printToConsole("Iteration #" + iteration);
         if (maxIterationCount == iteration || completeFitness())
         {
             completeLearning();
@@ -203,7 +207,7 @@ public class EvolutionAgentsManager : MonoBehaviour
             agents = new List<EvolutionAgent>();
             agentsObjects = new List<GameObject>();
             double mutationAttenuation = ((double)(maxIterationCount - iteration)) / maxIterationCount;
-            geneticAlgorithm.newGenerationFuzzy(mutationAttenuation);
+            geneticAlgorithm.newGenerationFuzzy(mutationAttenuation / 3);
             int middle = agentsCount / 2 - 1;
             for (int agentNum = 0; agentNum < agentsCount; agentNum++)
             {
@@ -212,6 +216,7 @@ public class EvolutionAgentsManager : MonoBehaviour
                 agentObject.SetActive(false);
                 EvolutionAgent agent = agentObject.GetComponent<EvolutionAgent>();
                 agents.Add(agent);
+                agent.UpdateBounds(floorManager.topLeft.y, floorManager.bottomRight.y);
                 agent.updateFuzzyParams(geneticAlgorithm.getFuzzyChromosome(agentNum));
                 agentsObjects.Add(agentObject);
             }
@@ -299,4 +304,5 @@ public class EvolutionAgentsManager : MonoBehaviour
     private Vector3 lastTarget;
     private GeneticAlgorithm geneticAlgorithm;
     private bool isComplete = false;
+    private Utils.Logger logger;
 }

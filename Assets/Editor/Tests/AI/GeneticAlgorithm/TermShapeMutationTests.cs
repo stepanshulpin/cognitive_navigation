@@ -317,7 +317,7 @@ namespace Tests.AI.GeneticAlgorithmTest
             Assert.IsTrue(Math.Abs(3 - sigmoidal.GetValues()[1]) < eps);
         }
 
-        [Test] 
+        [Test]
         public void setGetValuesTriangular()
         {
             Term triangular = TermHelper.instantiate(TermType.Triangular, "test");
@@ -419,6 +419,50 @@ namespace Tests.AI.GeneticAlgorithmTest
             Term triangular = TermHelper.instantiate(TermType.Triangular, "test");
             triangular.Update(trapezoidal.GetGenericParameters());
             Assert.IsTrue(TermHelper.isKeepTolerance(trapezoidal, triangular, 0, 10));
+        }
+
+        [Test]
+        public void bellToTrap()
+        {
+            Term bell = TermHelper.instantiate(TermType.Bell, "test");
+            bell.SetValues(new double[] { 2, 4, 6 });
+            Term trapezodial = TermHelper.instantiate(TermType.Trapezodial, "test");
+            trapezodial.Update(bell.GetGenericParameters());
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 4; i++)
+            {
+                builder.Append(trapezodial.GetValues()[i]);
+                builder.Append(" ");
+            }
+            Debug.Log(builder.ToString());
+        }
+
+        [Test]
+        public void getDirection()
+        {
+            GetMovementDirection();
+        }
+        
+        [Test]
+        public void deltaTime()
+        {
+            Vector2 target = new Vector2(10, -10);
+            Vector2 right = new Vector2(1, 0);
+            float angle = Vector2.SignedAngle(right, target / target.magnitude);
+            Debug.Log(angle);
+        }
+
+        private Vector3 GetMovementDirection()
+        {
+            Vector3 desiredDirection = new Vector3(10,0,0) - new Vector3(40, 0, 0);
+            Debug.Log(desiredDirection);
+            float rotationAngle = -40;
+            desiredDirection.y = 0.0f;
+            Quaternion quaternion = Quaternion.AngleAxis(rotationAngle, Vector3.up);
+            Debug.Log(quaternion);
+            desiredDirection = quaternion * desiredDirection;
+            Debug.Log(desiredDirection);
+            return desiredDirection;
         }
 
 

@@ -154,6 +154,12 @@ public class EvolutionAgent : MonoBehaviour
             seconds = newSeconds;
             previousPosition = transform.position.x;
         }
+        if (transform.position.z > zBoundMax + 1 || transform.position.z < zBoundMin - 1)
+        {
+            isCrashed = true;
+            Debug.Log(transform.position.z);
+            Debug.Log("Kill lost agent");
+        }
         if (isInit)
         {
             if (hasTarget)
@@ -209,6 +215,12 @@ public class EvolutionAgent : MonoBehaviour
         return Mathf.Min(this.maxSpeed, Math.Min(direction.magnitude / this.slowingDistance * this.maxSpeed, controllerSpeed));
     }
 
+    public void UpdateBounds(double min, double max)
+    {
+        zBoundMin = min;
+        zBoundMax = max;
+    }
+
     private Vector3 targetPosition;
 
     private bool hasTarget = false;
@@ -227,79 +239,13 @@ public class EvolutionAgent : MonoBehaviour
 
     private Dictionary<string, double> fuzzyEngineOutput;
 
+    private double zBoundMin = 0;
+    private double zBoundMax = 0;
+
     private bool isCrashed;
 
     private bool isInit = false;
 
     private double seconds = 0;
     private double previousPosition = 0;
-
-    private void junk()
-    {
-        float rotationAngle = 0;
-        if (this.sensorManager.SensorsOutput[0] < 7)
-        {
-            if (this.sensorManager.SensorsOutput[0] < 5)
-            {
-                rotationAngle += 15.0f;
-            }
-            else
-            {
-                rotationAngle += 5.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[1] < 7)
-        {
-            if (this.sensorManager.SensorsOutput[1] < 5)
-            {
-                rotationAngle += 25.0f;
-            }
-            else
-            {
-                rotationAngle += 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[2] < 7)
-        {
-            if (this.sensorManager.SensorsOutput[2] < 5)
-            {
-                rotationAngle += 45.0f;
-            }
-            else
-            {
-                rotationAngle += 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[3] < 7)
-        {
-            if (this.sensorManager.SensorsOutput[3] < 5)
-            {
-                rotationAngle -= 25.0f;
-            }
-            else
-            {
-                rotationAngle -= 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[4] < 7)
-        {
-            if (this.sensorManager.SensorsOutput[4] < 5)
-            {
-                rotationAngle -= 15.0f;
-            }
-            else
-            {
-                rotationAngle -= 5.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[3] < 7)
-        {
-            rotationAngle -= 15.0f;
-        }
-        if (this.sensorManager.SensorsOutput[4] < 7)
-        {
-            rotationAngle -= 15.0f;
-        }
-
-    }
 }

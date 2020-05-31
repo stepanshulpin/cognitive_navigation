@@ -113,7 +113,23 @@ public class EvolutionFloorManager : MonoBehaviour {
             {
                 if (agent.transform.position.x > lastSpawnedSegmentPosition.x)
                 {
-                    SpawnNewSegment();
+                    double prob = random.NextDouble();
+                    if (prob > 0.9)
+                    {
+                        double prob2 = random.NextDouble();
+                        if (prob2 > 0.7)
+                        {
+                            SpawnTunnelSegment();
+                        }
+                        else
+                        {
+                            SpawnLineSegment();
+                        }
+                    }
+                    else
+                    {
+                        SpawnNewSegment();
+                    }
                     break;
                 }
             }
@@ -135,7 +151,146 @@ public class EvolutionFloorManager : MonoBehaviour {
         newSegment.SetActive(true);
         segments.Enqueue(newSegment);
         InitializeObstacles(newSegment);
-    }    
+    }
+
+    private void SpawnLineSegment()
+    {
+        Vector3 position = lastSpawnedSegmentPosition + OFFSET_BETWEEN_FLOOR_SEGMENTS;
+        GameObject newSegment = segments.Dequeue();
+        newSegment.transform.position = position;
+        lastSpawnedSegmentPosition = position;
+        newSegment.SetActive(true);
+        segments.Enqueue(newSegment);
+        InitializeObstaclesLine(newSegment);
+    }
+
+    private void SpawnTunnelSegment()
+    {
+        Vector3 position = lastSpawnedSegmentPosition + OFFSET_BETWEEN_FLOOR_SEGMENTS;
+        GameObject newSegment = segments.Dequeue();
+        newSegment.transform.position = position;
+        lastSpawnedSegmentPosition = position;
+        newSegment.SetActive(true);
+        segments.Enqueue(newSegment);
+        InitializeObstaclesTunnel(newSegment);
+    }
+
+    private void InitializeObstaclesLine(GameObject newSegment)
+    {
+        List<GameObject> obstacles = segmentStaticObstacles[newSegment.GetInstanceID()];
+        GameObject obstacle0 = obstacles[0];
+        GameObject obstacle1 = obstacles[1];
+        GameObject obstacle2 = obstacles[2];
+        GameObject obstacle3 = obstacles[3];
+        obstacle2.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
+        obstacle3.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
+        obstacle0.transform.localScale = new Vector3(1, 1, 15);
+        obstacle1.transform.localScale = new Vector3(1, 1, 9);
+        obstacle2.transform.localScale = new Vector3(1, 1, 18);
+        obstacle3.transform.localScale = new Vector3(1, 1, 10);
+        obstacle0.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 4,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 4
+        );
+
+        obstacle1.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 4,
+            0.5f,
+            topLeft.y + (bottomRight.y - topLeft.y) / 7
+        );
+        obstacle2.transform.localPosition = new Vector3(
+            (bottomRight.x + topLeft.x) / 2 + (bottomRight.x - topLeft.x) / 4,
+            0.5f,
+            topLeft.y + (bottomRight.y - topLeft.y) / 4
+        );
+        obstacle3.transform.localPosition = new Vector3(
+            (bottomRight.x + topLeft.x) / 2 + (bottomRight.x - topLeft.x) / 2.5f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 4
+        );
+        obstacle0.SetActive(true);
+        obstacle1.SetActive(true);
+        obstacle2.SetActive(true);
+        obstacle3.SetActive(true);
+        List<GameObject> another = obstacles.GetRange(4, obstacles.Count - 4);
+        foreach(GameObject obstacle in another)
+        {
+            obstacle.SetActive(false);
+        }
+    }
+
+    private void InitializeObstaclesTunnel(GameObject newSegment)
+    {
+        List<GameObject> obstacles = segmentStaticObstacles[newSegment.GetInstanceID()];
+        GameObject obstacle0 = obstacles[0];
+        GameObject obstacle1 = obstacles[1];
+        GameObject obstacle2 = obstacles[2];
+        GameObject obstacle3 = obstacles[3];
+        GameObject obstacle4 = obstacles[4];
+        GameObject obstacle5 = obstacles[5];
+        GameObject obstacle6 = obstacles[6];
+        obstacle1.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
+        obstacle2.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
+        obstacle3.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
+        obstacle4.transform.localRotation = Quaternion.AngleAxis(-45, Vector3.up);
+        obstacle5.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
+        obstacle6.transform.localRotation = Quaternion.AngleAxis(45, Vector3.up);
+        obstacle0.transform.localScale = new Vector3(1, 1, 18);
+        obstacle1.transform.localScale = new Vector3(1, 1, 18);
+        obstacle2.transform.localScale = new Vector3(1, 1, 18);
+        obstacle3.transform.localScale = new Vector3(1, 1, 18);
+        obstacle4.transform.localScale = new Vector3(1, 1, 18);
+        obstacle5.transform.localScale = new Vector3(1, 1, 12);
+        obstacle6.transform.localScale = new Vector3(1, 1, 12);
+        obstacle0.transform.localPosition = new Vector3(
+            topLeft.x,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 3
+        );
+        obstacle1.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 4.5f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 2.5f
+        );
+        obstacle2.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 5f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.3f
+        );
+        obstacle3.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.7f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 2.4f
+        );
+        obstacle4.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.7f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.3f
+        );
+        obstacle5.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.1f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.1f
+        );
+        obstacle6.transform.localPosition = new Vector3(
+            topLeft.x + (bottomRight.x - topLeft.x) / 1.1f,
+            0.5f,
+            bottomRight.y - (bottomRight.y - topLeft.y) / 1.8f
+        );
+        obstacle0.SetActive(true);
+        obstacle1.SetActive(true);
+        obstacle2.SetActive(true);
+        obstacle3.SetActive(true);
+        obstacle4.SetActive(true);
+        obstacle5.SetActive(true);
+        obstacle6.SetActive(true);
+        List<GameObject> another = obstacles.GetRange(7, obstacles.Count - 7);
+        foreach (GameObject obstacle in another)
+        {
+            obstacle.SetActive(false);
+        }
+    }
 
     private void InitializeObstacles(GameObject segment) {
         List<GameObject> obstacles = segmentStaticObstacles[segment.GetInstanceID()];
@@ -143,6 +298,10 @@ public class EvolutionFloorManager : MonoBehaviour {
         bool top = false;
         bool bottom = false;
         foreach (GameObject obstacle in obstacles) {
+            if (obstacle.transform.localScale.z > 3)
+            {
+                obstacle.transform.localScale = new Vector3(1, 1, 1);
+            }
             if (activeObstaclesCount > 0) {
                 if (!top) { 
                     RandomizeObstacleTop(obstacle);

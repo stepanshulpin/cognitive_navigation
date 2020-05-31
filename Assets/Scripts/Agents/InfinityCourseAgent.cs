@@ -136,7 +136,7 @@ public class InfinityCourseAgent : MonoBehaviour {
         }
     }
 
-    private Vector3 GetMovementDirection(Vector3 targetPosition) {
+    protected Vector3 GetMovementDirection(Vector3 targetPosition) {
         Vector3 desiredDirection = targetPosition - this.transform.position;
         float rotationAngle = (float)fuzzyEngineOutput["direction"];
         desiredDirection.y = 0.0f;
@@ -144,74 +144,29 @@ public class InfinityCourseAgent : MonoBehaviour {
         return desiredDirection;
     }
 
-    private float GetMovementSpeed(Vector3 targetPosition) {
+    protected float GetMovementSpeed(Vector3 targetPosition) {
         Vector3 direction = targetPosition - this.transform.position;
         direction.y = 0.0f;
         float controllerSpeed = (float)fuzzyEngineOutput["speed"];
         return Mathf.Min(this.maxSpeed, Math.Min(direction.magnitude / this.slowingDistance * this.maxSpeed, controllerSpeed));
     }
 
-    private Vector3 targetPosition;
+    protected Vector3 targetPosition;
 
-    private bool hasTarget = false;
+    protected bool hasTarget = false;
 
-    private CharacterController characterController;
+    protected CharacterController characterController;
 
-    private Material originalMaterial;
+    protected Material originalMaterial;
 
-    private SensorsManager sensorManager;
+    protected SensorsManager sensorManager;
 
-    private static readonly float MIN_ANGLE_THRESHOLD = 10.0f;
+    protected static readonly float MIN_ANGLE_THRESHOLD = 10.0f;
 
-    private Engine fuzzyEngine;
+    protected Engine fuzzyEngine;
 
-    private Dictionary<string, double> fuzzyEngineInput;
+    protected Dictionary<string, double> fuzzyEngineInput;
 
-    private Dictionary<string, double> fuzzyEngineOutput;
+    protected Dictionary<string, double> fuzzyEngineOutput;
 
-    private void junk() {
-        float rotationAngle = 0;
-        if (this.sensorManager.SensorsOutput[0] < 7) {
-            if (this.sensorManager.SensorsOutput[0] < 5) {
-                rotationAngle += 15.0f;
-            } else {
-                rotationAngle += 5.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[1] < 7) {
-            if (this.sensorManager.SensorsOutput[1] < 5) {
-                rotationAngle += 25.0f;
-            } else {
-                rotationAngle += 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[2] < 7) {
-            if (this.sensorManager.SensorsOutput[2] < 5) {
-                rotationAngle += 45.0f;
-            } else {
-                rotationAngle += 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[3] < 7) {
-            if (this.sensorManager.SensorsOutput[3] < 5) {
-                rotationAngle -= 25.0f;
-            } else {
-                rotationAngle -= 15.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[4] < 7) {
-            if (this.sensorManager.SensorsOutput[4] < 5) {
-                rotationAngle -= 15.0f;
-            } else {
-                rotationAngle -= 5.0f;
-            }
-        }
-        if (this.sensorManager.SensorsOutput[3] < 7) {
-            rotationAngle -= 15.0f;
-        }
-        if (this.sensorManager.SensorsOutput[4] < 7) {
-            rotationAngle -= 15.0f;
-        }
-
-    }
 }

@@ -36,9 +36,21 @@ namespace AI.GeneticAlgorithm
 
         private FuzzyGene createRandomFuzzyGene(string name, double min, double max)
         {
-            int termType = random.Randomize(0, TermHelper.TERM_TYPES_COUNT);
-            TermType type = TermHelper.getTermType(termType);
-            return new FuzzyGene(type, name, min, max);
+            //int termType = random.Randomize(0, TermHelper.TERM_TYPES_COUNT);
+            //TermType type = TermHelper.getTermType(termType);
+            if (name.Equals("slow") || name.Equals("close") || name.Equals("left"))
+            {
+                return new FuzzyGene(TermType.ZShape, name, min, max);
+            }
+            if (name.Equals("medium") || name.Equals("forward"))
+            {
+                return new FuzzyGene(TermType.Trapezodial, name, min, max);
+            }
+            if (name.Equals("fast") || name.Equals("far") || name.Equals("right"))
+            {
+                return new FuzzyGene(TermType.SShape, name, min, max);
+            }
+            return new FuzzyGene(TermType.Triangular, name, min, max);
         }
 
         public void initializeFuzzyChromosomes(List<FuzzyGene.GeneParams> geneParams)
@@ -57,9 +69,11 @@ namespace AI.GeneticAlgorithm
                 {
                     FuzzyGene createdGen = gene.Clone();
                     double[] values = new double[gene.Size];
+                    double value = gene.MinValue;
                     for (int index = 0; index < gene.Size; index++)
                     {
-                        values[index] = random.Randomize(gene.MinValue, gene.MaxValue);
+                        value = random.Randomize(value, gene.MaxValue);
+                        values[index] = value;
                     }
                     createdGen.UpdateValues(values);
                     chromosome.AddFuzzyGene(createdGen);
@@ -146,12 +160,12 @@ namespace AI.GeneticAlgorithm
             foreach (IChromosome chromosome in previous)
             {
                 boundsMutation.Mutate(chromosome, parameters.MutationProbability);
-                shapeMutation.Mutate(chromosome, shapeProbability);
+                //shapeMutation.Mutate(chromosome, shapeProbability);
             }
             foreach (IChromosome chromosome in children)
             {
                 boundsMutation.Mutate(chromosome, parameters.MutationProbability);
-                shapeMutation.Mutate(chromosome, shapeProbability);
+                //shapeMutation.Mutate(chromosome, shapeProbability);
             }
         }
 

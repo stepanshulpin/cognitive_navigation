@@ -36,7 +36,7 @@ public class EvolutionTargetManager : MonoBehaviour {
 
     private EvolutionAgentsManager agentsManager;
 
-    private static readonly Vector3 TARGET_OFFSET = new Vector3(35.0f, 0.0f, 0.0f);
+    private static readonly Vector3 TARGET_OFFSET = new Vector3(135.0f, 0.0f, 0.0f);
 
-    private static readonly float MIN_DISTANCE_TO_TARGET_FOR_UPDATE = 10.0f;
+    private static readonly float MIN_DISTANCE_TO_TARGET_FOR_UPDATE = 50.0f;
 }
