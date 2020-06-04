@@ -442,7 +442,7 @@ namespace Tests.AI.GeneticAlgorithmTest
         {
             GetMovementDirection();
         }
-        
+
         [Test]
         public void deltaTime()
         {
@@ -450,6 +450,15 @@ namespace Tests.AI.GeneticAlgorithmTest
             Vector2 right = new Vector2(1, 0);
             float angle = Vector2.SignedAngle(right, target / target.magnitude);
             Debug.Log(angle);
+        }
+
+        [Test]
+        public void rotateTest()
+        {
+
+            Vector2 direction = Quaternion.Euler(0, 0, 45f) * new Vector2(4.9f, 0.7f);
+            Debug.Log(direction.ToString());
+
         }
 
         private Vector3 GetMovementDirection()

@@ -263,6 +263,35 @@ namespace Tests.AI.GeneticAlgorithmTest
             Assert.IsTrue(chromosome.Genes[4] <= 3 && chromosome.Genes[4] >= -3);
         }
 
+        [Test]
+        public void CanRecombine()
+        {
+            FuzzyChromosome chromosome = createChromosome();
+            FuzzyChromosome chromosome2 = new FuzzyChromosome();
+            FuzzyGene gene = new FuzzyGene(TermType.SShape, "test", -5, 5);
+            double[] values = new double[2] { 3, 2 };
+            gene.UpdateValues(values);
+            chromosome2.AddFuzzyGene(gene);
+            FuzzyGene gene2 = new FuzzyGene(TermType.Triangular, "test2", -3, 3);
+            double[] values2 = new double[3] { 3, 2, 1 };
+            gene2.UpdateValues(values2);
+            chromosome2.AddFuzzyGene(gene2);
+            LinearRecombination recombination = new LinearRecombination(null);
+            IChromosome newChromosome = recombination.calc(chromosome, chromosome2, 0.5);
+            Debug.Log(printGenes(newChromosome));
+        }
+
+        [Test]
+        public void CanGetRangesAsc()
+        {
+            IChromosome chromosome = createChromosomeWithThreeGenes();
+            Debug.Log(printGenes(chromosome));
+            for(int i = 0; i < chromosome.Size; i++)
+            {
+                Debug.Log(chromosome.getRanges(i));
+            }
+        }
+
         private String printGenes(IChromosome chromosome)
         {
             StringBuilder stringBuilder = new StringBuilder();

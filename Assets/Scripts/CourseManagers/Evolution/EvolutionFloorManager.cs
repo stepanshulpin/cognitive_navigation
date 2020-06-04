@@ -113,8 +113,7 @@ public class EvolutionFloorManager : MonoBehaviour {
             {
                 if (agent.transform.position.x > lastSpawnedSegmentPosition.x)
                 {
-                    double prob = random.NextDouble();
-                    if (prob > 0.9)
+                    if (!spawnDifficult)
                     {
                         double prob2 = random.NextDouble();
                         if (prob2 > 0.7)
@@ -125,10 +124,27 @@ public class EvolutionFloorManager : MonoBehaviour {
                         {
                             SpawnLineSegment();
                         }
+                        spawnDifficult = true;
                     }
                     else
                     {
-                        SpawnNewSegment();
+                        double prob = random.NextDouble();
+                        if (prob > 0.9)
+                        {
+                            double prob2 = random.NextDouble();
+                            if (prob2 > 0.7)
+                            {
+                                SpawnTunnelSegment();
+                            }
+                            else
+                            {
+                                SpawnLineSegment();
+                            }
+                        }
+                        else
+                        {
+                            SpawnNewSegment();
+                        }
                     }
                     break;
                 }
@@ -137,6 +153,7 @@ public class EvolutionFloorManager : MonoBehaviour {
     }
 
     private void SpawnStartSegment() {
+        spawnDifficult = false;
         GameObject newSegment = segments.Dequeue();
         newSegment.transform.position = Vector3.zero;
         lastSpawnedSegmentPosition = Vector3.zero;
@@ -459,4 +476,5 @@ public class EvolutionFloorManager : MonoBehaviour {
     private EvolutionAgentsManager agentsManager;
 
     private System.Random random;
+    private bool spawnDifficult;
 }

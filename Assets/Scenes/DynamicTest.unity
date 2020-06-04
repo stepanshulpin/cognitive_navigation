@@ -407,7 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab1: {fileID: 1315599821470092, guid: 86da26a877d75e64ab2a4f5b374efa0a,
     type: 3}
-  agentPrefab2: {fileID: 5588106170231608189, guid: 51751703ade5806459e4aa7383d4ef3d,
+  agentPrefab2: {fileID: 9210750338991660026, guid: 99b74fb10b46dee48aff117ce0505c7a,
     type: 3}
   agentsCount: 2
 --- !u!114 &1942208709

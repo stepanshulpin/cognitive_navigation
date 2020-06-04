@@ -51,7 +51,7 @@ public class DynamicCourseAgentsManager : MonoBehaviour {
             }
             else
             {
-                agents.Add(agentObject.GetComponent<DynamicAgent>());
+                agents.Add(agentObject.GetComponent<DynamicVoltageAgent>());
             }
             this.agentsObjects.Add(agentObject);
         }

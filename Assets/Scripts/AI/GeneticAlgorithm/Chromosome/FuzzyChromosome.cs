@@ -84,7 +84,33 @@ namespace AI.GeneticAlgorithm
             {
                 if (geneIndex >= prevIndex && geneIndex < gene.Size + prevIndex)
                 {
-                    return Tuple.Create(gene.MinValue, gene.MaxValue);
+                    if (gene.TermType == TermType.Trapezodial || gene.TermType == TermType.Triangular || gene.TermType == TermType.SShape || gene.TermType == TermType.ZShape)
+                    {
+                        if (geneIndex == prevIndex)
+                        {
+                            double nextGene = gene.Values[1];
+                            return Tuple.Create(gene.MinValue, nextGene);
+                        }
+                        else
+                        {
+                            if (geneIndex == gene.Size + prevIndex - 1)
+                            {
+                                double prevGene = gene.Values[gene.Size - 2];
+                                return Tuple.Create(prevGene, gene.MaxValue);
+                            }
+                            else
+                            {
+                                int index = geneIndex - prevIndex;
+                                double prevGene = gene.Values[index - 1];
+                                double nextGene = gene.Values[index + 1];
+                                return Tuple.Create(prevGene, nextGene);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return Tuple.Create(gene.MinValue, gene.MaxValue);
+                    }
                 }
                 prevIndex += gene.Size;
             }

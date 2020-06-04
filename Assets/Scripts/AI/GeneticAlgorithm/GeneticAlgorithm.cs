@@ -160,12 +160,12 @@ namespace AI.GeneticAlgorithm
             foreach (IChromosome chromosome in previous)
             {
                 boundsMutation.Mutate(chromosome, parameters.MutationProbability);
-                //shapeMutation.Mutate(chromosome, shapeProbability);
+                shapeMutation.Mutate(chromosome, shapeProbability);
             }
             foreach (IChromosome chromosome in children)
             {
                 boundsMutation.Mutate(chromosome, parameters.MutationProbability);
-                //shapeMutation.Mutate(chromosome, shapeProbability);
+                shapeMutation.Mutate(chromosome, shapeProbability);
             }
         }
 

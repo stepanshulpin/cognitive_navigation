@@ -261,8 +261,8 @@ MonoBehaviour:
   maxFloorSegments: 10
   staticObstaclePrefab: {fileID: 1249729923951426, guid: de1f424386000c1438c4bcd96ea7308e,
     type: 3}
-  minStaticObstaclesPerSegment: 8
-  maxStaticObstaclesPerSegment: 12
+  minStaticObstaclesPerSegment: 10
+  maxStaticObstaclesPerSegment: 15
   maxObstacleRotationAngle: 90
   minObstacleScale: 0.5
   maxObstacleScale: 3
@@ -298,13 +298,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 3350753395677382428, guid: 223766ebc8707eb4dbc7931fe6108493,
     type: 3}
-  agentDistance: 0.1
+  agentDistance: 0.05
   agentsCount: 100
-  mutationProbability: 0.3
+  mutationProbability: 0.2
   childrenSize: 100
-  selectParentsTournamentSize: 30
+  selectParentsTournamentSize: 50
   draftPart: 0.2
-  maxIterationCount: 200
+  maxIterationCount: 500
   targetFitness: 1000
 --- !u!1 &2133087343
 GameObject:
