@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  turnSpeed: 3
+  turnSpeed: 2
   slowingDistance: 5
   R: 0.825
   l: 1.65
@@ -30,20 +30,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: EvolutionDynamicAgent
       objectReference: {fileID: 0}
+    - target: {fileID: 3394786747422987532, guid: 223766ebc8707eb4dbc7931fe6108493,
+        type: 3}
+      propertyPath: distanceSensorPrefab
+      value: 
+      objectReference: {fileID: 1627699947864058, guid: 68df736b7f8a9954691097ca7b80ba0e,
+        type: 3}
     - target: {fileID: 3353880331935762904, guid: 223766ebc8707eb4dbc7931fe6108493,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 3353880331935762904, guid: 223766ebc8707eb4dbc7931fe6108493,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3353880331935762904, guid: 223766ebc8707eb4dbc7931fe6108493,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.51
       objectReference: {fileID: 0}
     - target: {fileID: 3353880331935762904, guid: 223766ebc8707eb4dbc7931fe6108493,
         type: 3}

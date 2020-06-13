@@ -63,7 +63,6 @@ public class EvolutionDynamicAgentsManager : MonoBehaviour
     public class FuzzyParams
     {
         public string close = "close";
-        public string medium = "medium";
         public string far = "far";
         public string fastNeg = "fastNeg";
         public string mediumNeg = "mediumNeg";
@@ -83,7 +82,6 @@ public class EvolutionDynamicAgentsManager : MonoBehaviour
         List<FuzzyGene.GeneParams> geneParams = new List<FuzzyGene.GeneParams>();
         FuzzyParams fuzzyParams = new FuzzyParams();
         geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.close, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
-        geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.medium, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
         geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.far, fuzzyParams.sensorsMin, fuzzyParams.sensorsMax));
         geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.fastNeg, fuzzyParams.speedMin, fuzzyParams.speedMax));
         geneParams.Add(new FuzzyGene.GeneParams(fuzzyParams.mediumNeg, fuzzyParams.speedMin, fuzzyParams.speedMax));

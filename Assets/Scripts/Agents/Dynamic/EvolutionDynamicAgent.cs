@@ -15,7 +15,7 @@ namespace Assets.Scripts.Agents.Dynamic
     {
         public float maxSpeed = 10.0f;
 
-        public float turnSpeed = 3.0f;
+        public float turnSpeed = 2.0f;
 
         public float slowingDistance = 5.0f;
 
@@ -71,46 +71,40 @@ namespace Assets.Scripts.Agents.Dynamic
             fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
             Term close = chromosome.FuzzyGenes[0].Term;
-            Term medium = chromosome.FuzzyGenes[1].Term;
-            Term far = chromosome.FuzzyGenes[2].Term;
+            Term far = chromosome.FuzzyGenes[1].Term;
 
             LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);
             lls.AddTerm(close);
-            lls.AddTerm(medium);
             lls.AddTerm(far);
             fuzzyEngine.RegisterInputVariable(lls);
 
             LinguisticVariable ls = new LinguisticVariable("ls", 0.0, 15.0);
             ls.AddTerm(close);
-            ls.AddTerm(medium);
             ls.AddTerm(far);
             fuzzyEngine.RegisterInputVariable(ls);
 
             LinguisticVariable fs = new LinguisticVariable("fs", 0.0, 15.0);
             fs.AddTerm(close);
-            fs.AddTerm(medium);
             fs.AddTerm(far);
             fuzzyEngine.RegisterInputVariable(fs);
 
             LinguisticVariable rs = new LinguisticVariable("rs", 0.0, 15.0);
             rs.AddTerm(close);
-            rs.AddTerm(medium);
             rs.AddTerm(far);
             fuzzyEngine.RegisterInputVariable(rs);
 
             LinguisticVariable rrs = new LinguisticVariable("rrs", 0.0, 15.0);
             rrs.AddTerm(close);
-            rrs.AddTerm(medium);
             rrs.AddTerm(far);
             fuzzyEngine.RegisterInputVariable(rrs);
 
 
-            Term fastNeg = chromosome.FuzzyGenes[3].Term;
-            Term mediumNeg = chromosome.FuzzyGenes[4].Term;
-            Term slowNeg = chromosome.FuzzyGenes[5].Term;
-            Term slowPos = chromosome.FuzzyGenes[6].Term;
-            Term mediumPos = chromosome.FuzzyGenes[7].Term;
-            Term fastPos = chromosome.FuzzyGenes[8].Term;
+            Term fastNeg = chromosome.FuzzyGenes[2].Term;
+            Term mediumNeg = chromosome.FuzzyGenes[3].Term;
+            Term slowNeg = chromosome.FuzzyGenes[4].Term;
+            Term slowPos = chromosome.FuzzyGenes[5].Term;
+            Term mediumPos = chromosome.FuzzyGenes[6].Term;
+            Term fastPos = chromosome.FuzzyGenes[7].Term;
 
             LinguisticVariable speedL = new LinguisticVariable("speedL", -10.0, 10.0);
             speedL.AddTerm(fastNeg);
@@ -131,96 +125,26 @@ namespace Assets.Scripts.Agents.Dynamic
             fuzzyEngine.RegisterOutputVariable(speedR);
 
             //1
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS close AND rs IS close AND rrs IS close THEN " +
-                "speedL IS very fastNeg AND speedR IS very fastNeg");
+            fuzzyEngine.RegisterRule("IF lls IS close THEN speedL IS mediumPos AND speedR IS mediumNeg");
             //2
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS close AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS mediumNeg AND speedR IS fastNeg");
+            fuzzyEngine.RegisterRule("IF ls IS close THEN speedL IS mediumPos AND speedR IS mediumNeg");
             //3
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS close AND rs IS far AND rrs IS far THEN " +
-                "speedL IS very fastPos AND speedR IS very fastNeg");
+            fuzzyEngine.RegisterRule("IF fs IS far AND ls IS far AND rs IS far THEN speedL IS very fastPos AND speedR IS very fastPos");
             //4
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS medium AND rs IS close AND rrs IS close THEN " +
-                "speedL IS mediumNeg AND speedR IS mediumNeg");
+            fuzzyEngine.RegisterRule("IF fs IS close AND rs IS far THEN speedL IS mediumPos AND speedR IS mediumNeg");
             //5
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS medium AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS fastPos AND speedR IS fastNeg");
+            fuzzyEngine.RegisterRule("IF fs IS close AND ls IS far THEN speedL IS mediumNeg AND speedR IS mediumPos");
             //6
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS medium AND rs IS far AND rrs IS far THEN " +
-                "speedL IS fastPos AND speedR IS fastNeg");
+            fuzzyEngine.RegisterRule("IF fs IS very close AND rs IS far THEN speedL IS slowPos AND speedR IS slowNeg");
             //7
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS far AND rs IS close AND rrs IS close THEN " +
-                "speedL IS fastNeg AND speedR IS fastNeg");
+            fuzzyEngine.RegisterRule("IF fs IS very close AND ls IS far THEN speedL IS slowNeg AND speedR IS slowPos");
             //8
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS far AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS fastPos AND speedR IS mediumNeg");
+            fuzzyEngine.RegisterRule("IF fs IS close AND rs IS close AND ls IS close THEN speedL IS fastPos AND speedR IS slowNeg");
             //9
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS close AND fs IS far AND rs IS far AND rrs IS far THEN " +
-                "speedL IS fastPos AND speedR IS mediumPos");
+            fuzzyEngine.RegisterRule("IF rs IS close THEN speedL IS mediumNeg AND speedR IS mediumPos");
             //10
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS close AND rs IS close AND rrs IS close THEN " +
-                "speedL IS fastNeg AND speedR IS mediumNeg");
-            //11
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS close AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS very fastNeg AND speedR IS very fastNeg");
-            //12
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS close AND rs IS far AND rrs IS far THEN " +
-                "speedL IS fastNeg AND speedR IS very fastNeg");
-            //13
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS medium AND rs IS close AND rrs IS close THEN " +
-                "speedL IS mediumNeg AND speedR IS slowNeg");
-            //14
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS medium AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS mediumNeg AND speedR IS mediumNeg");
-            //15
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS medium AND rs IS far AND rrs IS far THEN " +
-                "speedL IS mediumPos AND speedR IS slowNeg");
-            //16
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS far AND rs IS close AND rrs IS close THEN " +
-                "speedL IS slowPos AND speedR IS fastPos");
-            //17
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS far AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS mediumPos AND speedR IS slowPos");
-            //18
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS medium AND fs IS far AND rs IS far AND rrs IS far THEN " +
-                "speedL IS fastPos AND speedR IS mediumPos");
-            //19
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS close AND rs IS close AND rrs IS close THEN " +
-                "speedL IS fastNeg AND speedR IS fastPos");
-            //20
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS close AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS fastNeg AND speedR IS fastPos");
-            //21
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS close AND rs IS far AND rrs IS far THEN " +
-                "speedL IS fastNeg AND speedR IS fastPos");
-            //22
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS medium AND rs IS close AND rrs IS close THEN " +
-                "speedL IS slowPos AND speedR IS mediumPos");
-            //23
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS medium AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS slowPos AND speedR IS mediumPos");
-            //24
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS medium AND rs IS far AND rrs IS far THEN " +
-                "speedL IS slowPos AND speedR IS mediumPos");
-            //25
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS far AND rs IS close AND rrs IS close THEN " +
-                "speedL IS slowPos AND speedR IS very fastPos");
-            //26
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS far AND rs IS medium AND rrs IS medium THEN " +
-                "speedL IS mediumPos AND speedR IS very fastPos");
-            //27
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS medium AND fs IS far AND rs IS medium AND rrs IS close THEN " +
-                "speedL IS mediumPos AND speedR IS mediumPos");
-            //28
-            fuzzyEngine.RegisterRule("IF lls IS close AND ls IS far AND fs IS far AND rs IS far AND rrs IS close THEN " +
-                "speedL IS very fastPos AND speedR IS very fastPos");
-            //29
-            fuzzyEngine.RegisterRule("IF lls IS medium AND ls IS far AND fs IS far AND rs IS far AND rrs IS medium THEN " +
-                "speedL IS very fastPos AND speedR IS very fastPos");
-            //30
-            fuzzyEngine.RegisterRule("IF lls IS far AND ls IS far AND fs IS far AND rs IS far AND rrs IS far THEN " +
-                "speedL IS very fastPos AND speedR IS very fastPos");
-            
+            fuzzyEngine.RegisterRule("IF rrs IS close THEN speedL IS mediumNeg AND speedR IS mediumPos");
+
             fuzzyEngineInput = new Dictionary<string, double>();
             fuzzyEngineInput.Add("lls", 0.0);
             fuzzyEngineInput.Add("ls", 0.0);
