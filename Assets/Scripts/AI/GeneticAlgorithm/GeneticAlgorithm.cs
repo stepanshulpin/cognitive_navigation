@@ -36,21 +36,9 @@ namespace AI.GeneticAlgorithm
 
         private FuzzyGene createRandomFuzzyGene(string name, double min, double max)
         {
-            //int termType = random.Randomize(0, TermHelper.TERM_TYPES_COUNT);
-            //TermType type = TermHelper.getTermType(termType);
-            if (name.Equals("slow") || name.Equals("close") || name.Equals("left"))
-            {
-                return new FuzzyGene(TermType.ZShape, name, min, max);
-            }
-            if (name.Equals("medium") || name.Equals("forward"))
-            {
-                return new FuzzyGene(TermType.Trapezodial, name, min, max);
-            }
-            if (name.Equals("fast") || name.Equals("far") || name.Equals("right"))
-            {
-                return new FuzzyGene(TermType.SShape, name, min, max);
-            }
-            return new FuzzyGene(TermType.Triangular, name, min, max);
+            int termType = random.Randomize(0, TermHelper.TERM_TYPES_COUNT);
+            TermType type = TermHelper.getTermType(termType);
+            return new FuzzyGene(type, name, min, max);
         }
 
         public void initializeFuzzyChromosomes(List<FuzzyGene.GeneParams> geneParams)

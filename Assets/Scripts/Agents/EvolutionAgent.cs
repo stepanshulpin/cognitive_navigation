@@ -111,10 +111,8 @@ public class EvolutionAgent : MonoBehaviour
         direction.AddTerm(right);
         fuzzyEngine.RegisterOutputVariable(direction);
 
-        //fuzzyEngine.RegisterRule("IF lls IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF lls IS close THEN speed IS medium AND direction IS right");
 
-        //fuzzyEngine.RegisterRule("IF ls IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF ls IS close THEN speed IS medium AND direction IS right");
 
         fuzzyEngine.RegisterRule("IF fs IS far AND ls IS far AND rs IS far THEN speed IS fast AND direction IS forward");
@@ -124,10 +122,8 @@ public class EvolutionAgent : MonoBehaviour
         fuzzyEngine.RegisterRule("IF fs IS very close AND ls IS far THEN speed IS slow AND direction IS left");
         fuzzyEngine.RegisterRule("IF fs IS close AND rs IS close AND ls IS close THEN speed IS slow AND direction IS very right");
 
-        //fuzzyEngine.RegisterRule("IF rs IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF rs IS close THEN speed IS medium AND direction IS left");
 
-        //fuzzyEngine.RegisterRule("IF rrs IS far THEN speed IS fast AND direction IS forward");
         fuzzyEngine.RegisterRule("IF rrs IS close THEN speed IS medium AND direction IS left");
 
         fuzzyEngineInput = new Dictionary<string, double>();

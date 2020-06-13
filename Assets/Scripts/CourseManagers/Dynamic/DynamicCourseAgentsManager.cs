@@ -61,12 +61,12 @@ public class DynamicCourseAgentsManager : MonoBehaviour {
 
     private void Start() {
         this.bestAgentIndex = 0;
-        this.agentsObjects[bestAgentIndex].SetActive(true);
+        //this.agentsObjects[bestAgentIndex].SetActive(true);
         this.followingCamera.target = this.agentsObjects[bestAgentIndex].transform;
         //this.agents[bestAgentIndex].UseBestSkin();
-        for (int i = 0; i < this.agentsCount; i++) {
-            this.agentsObjects[i].SetActive(true);
-        }
+        //for (int i = 0; i < this.agentsCount; i++) {
+            this.agentsObjects[1].SetActive(true);
+        //}
     }
 
     private void Update() {

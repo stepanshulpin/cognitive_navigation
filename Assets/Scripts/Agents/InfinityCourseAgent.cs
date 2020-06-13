@@ -37,7 +37,7 @@ public class InfinityCourseAgent : MonoBehaviour {
 
         fuzzyEngine = new Engine(fuzzyInferenceSystem);
 
-        Term close = new ZShapeTerm("close", 3.0, 6.0);
+        Term close = new ZShapeTerm("close", 4.0, 8.0);
         Term far = new SShapeTerm("far", 5.0, 9.0);
 
         LinguisticVariable lls = new LinguisticVariable("lls", 0.0, 15.0);
@@ -76,9 +76,9 @@ public class InfinityCourseAgent : MonoBehaviour {
         speed.AddTerm(fast);
         fuzzyEngine.RegisterOutputVariable(speed);
 
-        Term left = new ZShapeTerm("left", -23.0, -23.0);
+        Term left = new ZShapeTerm("left", -23.0, 0);
         Term forward = new TrapezoidalTerm("forward", -10.0, -5.0, 5.0, 10.0);
-        Term right = new SShapeTerm("right", 23.0, 23.0);
+        Term right = new SShapeTerm("right", 0, 23.0);
 
         LinguisticVariable direction = new LinguisticVariable("direction", -45.0, 45.0);
         direction.AddTerm(left);

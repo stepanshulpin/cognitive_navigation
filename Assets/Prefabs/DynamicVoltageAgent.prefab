@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  turnSpeed: 15
+  turnSpeed: 3
   slowingDistance: 5
   bestSkin: {fileID: 2100000, guid: 1beddbfc225b03a48a08417dec66994c, type: 2}
+  R: 0.825
+  l: 1.65
 --- !u!1001 &3629857686913992839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27,6 +29,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DynamicVoltageAgent
+      objectReference: {fileID: 0}
+    - target: {fileID: -3308786273709703934, guid: 51751703ade5806459e4aa7383d4ef3d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3308786273709703934, guid: 51751703ade5806459e4aa7383d4ef3d,
+        type: 3}
+      propertyPath: turnSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5485176813137684653, guid: 51751703ade5806459e4aa7383d4ef3d,
+        type: 3}
+      propertyPath: turnSpeed
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5586667946289749433, guid: 51751703ade5806459e4aa7383d4ef3d,
         type: 3}
@@ -81,11 +98,6 @@ PrefabInstance:
     - target: {fileID: 5586667946289749433, guid: 51751703ade5806459e4aa7383d4ef3d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -3308786273709703934, guid: 51751703ade5806459e4aa7383d4ef3d,
-        type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

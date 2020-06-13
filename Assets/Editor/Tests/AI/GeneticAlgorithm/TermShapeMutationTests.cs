@@ -453,6 +453,20 @@ namespace Tests.AI.GeneticAlgorithmTest
         }
 
         [Test]
+        public void testSin()
+        {
+            double sin = Math.Sin(30 * Math.PI / 180);
+            Debug.Log(sin);
+        }
+
+        [Test]
+        public void testArctg()
+        {
+            double sin = Math.Atan(1) * 180 / Math.PI;
+            Debug.Log(sin);
+        }
+
+        [Test]
         public void rotateTest()
         {
 

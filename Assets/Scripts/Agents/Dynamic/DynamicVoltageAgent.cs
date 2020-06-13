@@ -1,7 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class DynamicVoltageAgent : InfinityCourseAgent
 {
+
+    public float R = 0.825f;
+    public float l = 1.65f;
+
+    private float speedL = 10f;
+    private float speedR = 10f;
+
 
     private void Awake()
     {
@@ -11,6 +19,8 @@ public class DynamicVoltageAgent : InfinityCourseAgent
 
         random = new System.Random();
 
+        startSeconds = new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
+        transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
         /*IFuzzyInferenceSystem fuzzyInferenceSystem = new MamdaniFuzzyInference(new Minimum(), new Maximum(), new Minimum(),
                 new Maximum(), new CentroidDefuzzifier());
 
@@ -123,50 +133,85 @@ public class DynamicVoltageAgent : InfinityCourseAgent
             transform.position = new Vector3(previousPoint.x + x * Time.deltaTime, previousPoint.y, previousPoint.z + z * Time.deltaTime);
 
             //characterController.Move(this.transform.forward * movementSpeed * Time.deltaTime * 0.55f);*/
-            if (xy == null)
-            {
-                xy = new Vector2(transform.position.x, transform.position.z);
-            }
-            if (dotXY == null)
-            {
-                dotXY = new Vector2(0, 0);
-            }
-            int u1 = random.Next(0, 10);
-            int u2 = random.Next(0, 10);
-            Vector2 U = new Vector2(7, 7);
-            Debug.Log("U: " + U.ToString());
-            Vector2 newXY = getNewPosition(U);
 
-            transform.position = new Vector3(newXY.x, transform.position.y, newXY.y);
-            Vector2 target = newXY - xy;
+            Vector2 target = new Vector2(100, 0);
             Vector2 right = new Vector2(1, 0);
+            float currentRotation = transform.eulerAngles.y;
+            Debug.Log("currentRotation = " + currentRotation);
             float angle = Vector2.SignedAngle(right, target / target.magnitude);
-            transform.rotation = Quaternion.AngleAxis(90 - angle, Vector3.up);
-            Debug.Log("Angle: " + angle);
-            Debug.Log("XY: " + newXY.ToString());
-            xy = newXY;
+            float alpha = (90 - currentRotation - angle) * Time.deltaTime * turnSpeed;
+            Debug.Log("Alpha = " + alpha);
+            //скорости вращения для поворота
+            float omegaL = 2 * (float)Math.Tan(alpha * Math.PI / 180) / R;
+            float omegaR = -omegaL;
+
+            double currentSeconds = new TimeSpan(DateTime.Now.Ticks).TotalSeconds - startSeconds;
+            Vector2 speed = getSpeed(currentSeconds);
+
+            float deltaV1 = speed.x * Time.deltaTime;
+            float deltaV2 = speed.y * Time.deltaTime;
+            Debug.Log(speed);
+
+            omegaL = omegaL + deltaV1;
+            omegaR = omegaR + deltaV2;
+
+            Debug.Log("Left speed = " + omegaL + "; Right speed = " + omegaR);
+
+            float v1 = R * omegaL;
+            float v2 = R * omegaR;
+            float phi = - currentRotation;
+            float xNew = transform.position.x - 0.5f * (v2 + v1) * (float)Math.Sin(phi * Math.PI / 180);
+            float yNew = transform.position.z + 0.5f * (v2 + v1) * (float)Math.Cos(phi * Math.PI / 180);
+            float phiDif = (float)(Math.Atan((v2 - v1) / (2 * l)) * 180 / Math.PI);
+            Debug.Log("PhiDiff " + phiDif);
+            float phiNew = phi + phiDif;
+            float newRotation = - phiNew;
+
+            transform.rotation = Quaternion.AngleAxis(newRotation, Vector3.up);
+            transform.position = new Vector3(xNew, transform.position.y, yNew);
         }
     }
 
-    private Vector2 getNewPosition(Vector2 u)
+    private Vector2 getSpeed(double seconds)
     {
-        Vector2 rotPrevXY = new Vector2(xy.x, xy.y);
-        rotPrevXY = Quaternion.Euler(0, 0, 45f) * rotPrevXY;
+        /*int iter = Convert.ToInt32(Math.Floor(seconds));
+        Debug.Log("Iter = " + iter);
+        if (iter < 3)
+        {
+            return new Vector2(10, 10);
+        }
+        if (iter < 5)
+        {
+            return new Vector2(10, 8);
+        }
+        if (iter < 7)
+        {
+            return new Vector2(10, 6);
+        }
+        if (iter < 9)
+        {
+            return new Vector2(10, 8);
+        }
+        if (iter < 11)
+        {
+            return new Vector2(10, 10);
+        }
+        if (iter < 13)
+        {
+            return new Vector2(8, 10);
+        }
+        if (iter < 15)
+        {
+            return new Vector2(6, 10);
+        }
+        if (iter < 17)
+        {
+            return new Vector2(8, 10);
+        }*/
+        return new Vector2(-10, -10);
 
-        float x = rotPrevXY.x + Time.deltaTime * dotXY.x;
-        float dotX = dotXY.x + Time.deltaTime * u.x;
-        float y = rotPrevXY.y + Time.deltaTime * dotXY.y;
-        float dotY = dotXY.y + Time.deltaTime * u.y;
-
-        Vector2 rotXY = new Vector2(x, y);
-        rotXY = Quaternion.Euler(0, 0, -45f) * rotXY;
-        dotXY = new Vector2(dotX, dotY);
-
-        return rotXY;
     }
 
-    private Vector2 xy;
-    private Vector2 dotXY;
-
+    private double startSeconds = 0;
     private System.Random random;
 }
